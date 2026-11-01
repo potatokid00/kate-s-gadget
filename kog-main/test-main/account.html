@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+<script>KG.guard('user');</script>
+<style>
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}
+.in{width:100%;padding:.6rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none;color:#3D1223}
+.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}
+.btn{padding:.6rem 1rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:#7B314E;color:#fff}.btn-p:hover:not(:disabled){background:#592037}
+.btn-s{background:#fff;border:1px solid #F8DDE5;color:#592037}.btn-s:hover:not(:disabled){background:#FCEEF2}
+.chip{font-size:10px;font-weight:800;padding:.15rem .6rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}
+.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}
+.td{padding:.65rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.skeleton{background:linear-gradient(90deg,#FCEEF2 25%,#F8DDE5 50%,#FCEEF2 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:1rem}@keyframes sk{to{background-position:-200% 0}}
+img{max-width:100%}
+
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+<div class="flex items-center gap-3 mb-6">
+  <a href="index.html"><img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 rounded-xl"></a>
+  <div><h1 class="text-xl sm:text-2xl font-extrabold text-pinktheme-900 leading-tight">My Account</h1><p class="text-xs text-pinktheme-600">Your profile, password and activity</p></div>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6 items-start">
+  <section class="card p-5">
+    <div class="flex items-center gap-3 mb-4"><div id="av" class="w-12 h-12 rounded-2xl bg-pinktheme-700 text-white font-extrabold flex items-center justify-center"></div>
+      <div><p id="pName" class="text-sm font-extrabold text-pinktheme-900"></p><p id="pEmail" class="text-xs text-pinktheme-600"></p><span id="pRole" class="chip st-stage mt-1"></span></div></div>
+    <form id="profile" class="space-y-3" onsubmit="saveProfile(event)">
+      <div><label class="lb" for="aName">Full name</label><input id="aName" class="in" required></div>
+      <div><label class="lb" for="aPhone">Mobile number</label><input id="aPhone" class="in" type="tel"></div>
+      <div><label class="lb" for="aAddr">Default shipping address</label><textarea id="aAddr" rows="2" class="in"></textarea></div>
+      <button class="btn btn-p w-full" type="submit">Save profile</button>
+    </form>
+  </section>
+  <div class="space-y-6">
+    <section id="stats" class="card p-5"></section>
+    <section class="card p-5">
+      <h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3">Change password</h2>
+      <form id="pw" class="space-y-3" onsubmit="savePw(event)">
+        <div><label class="lb" for="pOld">Current password</label><input id="pOld" class="in" type="password" autocomplete="current-password" required></div>
+        <div><label class="lb" for="pNew">New password (min. 6 characters)</label><input id="pNew" class="in" type="password" autocomplete="new-password" minlength="6" required></div>
+        <button class="btn btn-p w-full" type="submit">Update password</button>
+      </form>
+    </section>
+    <button class="btn btn-s w-full" onclick="KG.auth.logout(); location.href='index.html'"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+  </div>
+</div>
+</main>
+<footer class="text-center text-[11px] text-pinktheme-700/70 py-6 border-t border-pinktheme-200">&copy; 2026 Kate's Original Gadgets &middot; Demo project: all payments are simulated and no real money is charged.</footer>
+<script>
+
+const {esc}=KG.util;
+function draw(){
+  const u=KG.auth.currentUser(), admin=KG.auth.isAdmin(u);
+  document.getElementById('av').textContent=u.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('pName').textContent=u.name; document.getElementById('pEmail').textContent=u.email; document.getElementById('pRole').textContent=admin?'Admin (Kate)':'Customer';
+  document.getElementById('aName').value=u.name; document.getElementById('aPhone').value=u.phone; document.getElementById('aAddr').value=u.address;
+  document.getElementById('stats').innerHTML=admin?`<h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-2">Staff account</h2><p class="text-xs">You are signed in as the store administrator.</p><a href="dashboard.html" class="btn btn-p mt-3">Open Staff Dashboard</a>`:
+   `<h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3">Your activity</h2><div class="grid grid-cols-3 gap-3 text-center">
+     <a href="tracking.html" class="p-3 rounded-2xl bg-pinktheme-50 border border-pinktheme-200"><b class="block text-lg text-pinktheme-900">${KG.orders.mine().length}</b><span class="text-[11px]">Orders</span></a>
+     <a href="transactions.html" class="p-3 rounded-2xl bg-pinktheme-50 border border-pinktheme-200"><b class="block text-lg text-pinktheme-900">${KG.txns.mine().length}</b><span class="text-[11px]">Transactions</span></a>
+     <a href="cart-dashboard.html" class="p-3 rounded-2xl bg-pinktheme-50 border border-pinktheme-200"><b class="block text-lg text-pinktheme-900">${KG.cart.count()}</b><span class="text-[11px]">In cart</span></a></div>`;
+}
+function saveProfile(e){ e.preventDefault(); const r=KG.auth.updateProfile({name:aName.value,phone:aPhone.value,address:aAddr.value}); KG.ui.toast(r.ok?'Profile saved.':r.error,r.ok?'success':'error'); }
+function savePw(e){ e.preventDefault(); const b=e.target.querySelector('button'); b.disabled=true; setTimeout(()=>{ const r=KG.auth.changePassword(pOld.value,pNew.value); b.disabled=false; if(r.ok){ e.target.reset(); } KG.ui.toast(r.ok?'Password updated.':r.error,r.ok?'success':'error'); },30); }
+if(KG.guard('user')) draw();
+
+</script>
+</body>
+</html>

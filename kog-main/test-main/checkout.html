@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+<script>KG.guard('customer');</script>
+<style>
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}
+.in{width:100%;padding:.6rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none;color:#3D1223}
+.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}
+.btn{padding:.6rem 1rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:#7B314E;color:#fff}.btn-p:hover:not(:disabled){background:#592037}
+.btn-s{background:#fff;border:1px solid #F8DDE5;color:#592037}.btn-s:hover:not(:disabled){background:#FCEEF2}
+.chip{font-size:10px;font-weight:800;padding:.15rem .6rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}
+.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}
+.td{padding:.65rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.skeleton{background:linear-gradient(90deg,#FCEEF2 25%,#F8DDE5 50%,#FCEEF2 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:1rem}@keyframes sk{to{background-position:-200% 0}}
+img{max-width:100%}
+
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+<div class="flex items-center gap-3 mb-6">
+  <a href="index.html"><img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 rounded-xl"></a>
+  <div><h1 class="text-xl sm:text-2xl font-extrabold text-pinktheme-900 leading-tight">Checkout</h1><p class="text-xs text-pinktheme-600">Confirm your details and place a simulated order</p></div>
+</div>
+
+<div id="empty" class="hidden card p-10 text-center">
+  <i class="fa-solid fa-bag-shopping text-4xl text-pinktheme-300 mb-3"></i>
+  <p class="text-sm font-extrabold text-pinktheme-900">There is nothing to check out</p>
+  <a href="index.html#catalog" class="btn btn-p mt-4">Browse products</a>
+</div>
+
+<div id="checkout" class="hidden">
+  <div class="kg-sim mb-5"><i class="fa-solid fa-flask mr-1"></i><b>SIMULATED PAYMENT.</b> This is a demonstration store. Choosing a payment method here does not charge any money, and no card or wallet details are collected.</div>
+  <div class="grid lg:grid-cols-5 gap-6 items-start">
+    <form id="form" class="lg:col-span-3 space-y-5" novalidate>
+      <section class="card p-5">
+        <h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3"><i class="fa-regular fa-user mr-1"></i> Contact information</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="lb" for="fName">Full name *</label><input id="fName" class="in" autocomplete="name"></div>
+          <div><label class="lb" for="fPhone">Mobile number *</label><input id="fPhone" class="in" type="tel" placeholder="0917 123 4567" autocomplete="tel"></div>
+        </div>
+        <div class="mt-3"><label class="lb" for="fEmail">Email address</label><input id="fEmail" class="in" type="email" autocomplete="email"></div>
+      </section>
+
+      <section class="card p-5">
+        <h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3"><i class="fa-solid fa-truck-fast mr-1"></i> Fulfillment</h2>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="cursor-pointer border-2 rounded-2xl p-3" id="optPickup"><input type="radio" name="ful" value="pickup" class="accent-pinktheme-700 mr-1" checked><b class="text-xs">Store Pickup</b><span class="block text-[10px] text-pinktheme-600 pl-5">Free</span></label>
+          <label class="cursor-pointer border-2 rounded-2xl p-3" id="optDelivery"><input type="radio" name="ful" value="delivery" class="accent-pinktheme-700 mr-1"><b class="text-xs">Home Delivery</b><span class="block text-[10px] text-pinktheme-600 pl-5">&#8369;150.00 flat fee</span></label>
+        </div>
+        <div id="pickupBox" class="mt-3"><label class="lb" for="fBranch">Pickup branch *</label><select id="fBranch" class="in"></select></div>
+        <div id="deliveryBox" class="mt-3 hidden"><label class="lb" for="fAddress">Complete shipping address *</label><textarea id="fAddress" rows="2" class="in" placeholder="House/Unit No., Street, Barangay, City, Province"></textarea></div>
+      </section>
+
+      <section class="card p-5">
+        <h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3"><i class="fa-solid fa-credit-card mr-1"></i> Payment method (simulated)</h2>
+        <div id="methods" class="grid sm:grid-cols-2 gap-2"></div>
+      </section>
+      <p id="formErr" class="hidden text-xs font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl p-3" role="alert"></p>
+    </form>
+
+    <aside class="lg:col-span-2 card p-5 lg:sticky lg:top-4">
+      <h2 class="text-xs font-black uppercase tracking-wider text-pinktheme-700 mb-3 pb-2 border-b border-pinktheme-100">Order summary</h2>
+      <div id="items" class="space-y-3 max-h-64 overflow-y-auto pr-1"></div>
+      <div class="space-y-2 text-xs border-t border-pinktheme-100 mt-4 pt-4">
+        <div class="flex justify-between"><span>Subtotal</span><b id="vSub"></b></div>
+        <div class="flex justify-between"><span>Shipping / handling</span><b id="vShip"></b></div>
+        <div class="flex justify-between text-base font-extrabold text-pinktheme-900 pt-2 border-t border-pinktheme-200"><span>Grand total</span><span id="vTotal"></span></div>
+      </div>
+      <button id="placeBtn" class="btn btn-p w-full mt-5 !py-3.5" type="button" onclick="place()"><i class="fa-solid fa-lock"></i><span>Confirm &amp; Place Order</span></button>
+      <a href="cart-dashboard.html" class="btn btn-s w-full mt-2">Back to cart</a>
+      <p class="text-[10px] text-center text-pinktheme-600 mt-3"><i class="fa-solid fa-shield-halved"></i> Guaranteed authentic gadgets</p>
+    </aside>
+  </div>
+</div>
+
+<div id="done" class="hidden card p-6 sm:p-10 max-w-2xl mx-auto text-center fade">
+  <div class="w-16 h-16 rounded-full bg-pinktheme-100 text-pinktheme-700 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-check text-2xl"></i></div>
+  <span class="chip st-stage uppercase tracking-widest">Order placed</span>
+  <h2 class="text-xl font-extrabold text-pinktheme-900 mt-3">Thank you for your order!</h2>
+  <p class="text-xs text-pinktheme-700 mt-1">Kate&rsquo;s team will review it. You can follow every step on the tracking page.</p>
+  <div id="receipt" class="text-left bg-pinktheme-50 border border-pinktheme-200 rounded-2xl p-4 my-5 text-xs space-y-2"></div>
+  <div class="kg-sim text-left mb-5"><i class="fa-solid fa-flask mr-1"></i><b>This was a simulated transaction.</b> No real payment was processed and no money was charged.</div>
+  <div class="grid sm:grid-cols-3 gap-2">
+    <a id="goTrack" href="tracking.html" class="btn btn-p">Track order</a>
+    <a href="transactions.html" class="btn btn-s">View transactions</a>
+    <a href="index.html#catalog" class="btn btn-s">Continue shopping</a>
+  </div>
+</div>
+</main>
+<footer class="text-center text-[11px] text-pinktheme-700/70 py-6 border-t border-pinktheme-200">&copy; 2026 Kate's Original Gadgets &middot; Demo project: all payments are simulated and no real money is charged.</footer>
+<script>
+
+const {esc,peso}=KG.util;
+const attemptId='att-'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+let placing=false;
+const BRANCHES=KG.STORES.filter(s=>!s.isDelivery);
+function val(id){return document.getElementById(id).value;}
+function fulfillment(){return document.querySelector('input[name=ful]:checked').value;}
+function method(){const m=document.querySelector('input[name=pay]:checked');return m?m.value:'';}
+function init(){
+  const u=KG.auth.currentUser();
+  const notes=KG.cart.reconcile(); const d=KG.cart.detailed();
+  if(!d.lines.length){ document.getElementById('empty').classList.remove('hidden'); if(notes.length) KG.ui.toast(notes[0],'error'); return; }
+  document.getElementById('checkout').classList.remove('hidden');
+  if(notes.length) KG.ui.toast(notes.join(' '),'info');
+  document.getElementById('fName').value=u.name; document.getElementById('fEmail').value=u.email; document.getElementById('fPhone').value=u.phone||''; document.getElementById('fAddress').value=u.address||'';
+  const savedId=localStorage.getItem('kate_selected_store'), saved=BRANCHES.find(b=>b.id===savedId)||BRANCHES[0];
+  document.getElementById('fBranch').innerHTML=BRANCHES.map(b=>`<option value="${esc(b.id)}" ${b.id===saved.id?'selected':''}>${esc(b.name)} \u2013 ${esc(b.region)} (${esc(b.pickupTime)})</option>`).join('');
+  if(savedId==='delivery'){ document.querySelector('input[name=ful][value=delivery]').checked=true; }
+  document.getElementById('methods').innerHTML=Object.entries(KG.PAY_METHODS).map(([k,l],i)=>`<label class="cursor-pointer border border-pinktheme-200 rounded-xl p-3 flex items-center gap-2 hover:bg-pinktheme-50"><input type="radio" name="pay" value="${k}" class="accent-pinktheme-700" ${i===0?'checked':''}><span class="text-xs font-bold text-pinktheme-900">${esc(l)}</span></label>`).join('');
+  document.querySelectorAll('input[name=ful]').forEach(r=>r.addEventListener('change',summary));
+  summary();
+}
+function summary(){
+  const d=KG.cart.detailed(), del=fulfillment()==='delivery', ship=del?KG.SHIPPING_FEE:0;
+  document.getElementById('pickupBox').classList.toggle('hidden',del); document.getElementById('deliveryBox').classList.toggle('hidden',!del);
+  document.getElementById('optPickup').className='cursor-pointer border-2 rounded-2xl p-3 '+(!del?'border-pinktheme-500 bg-pinktheme-50':'border-pinktheme-200 bg-white');
+  document.getElementById('optDelivery').className='cursor-pointer border-2 rounded-2xl p-3 '+(del?'border-pinktheme-500 bg-pinktheme-50':'border-pinktheme-200 bg-white');
+  document.getElementById('items').innerHTML=d.lines.map(l=>`<div class="flex items-center gap-3"><img src="${esc(l.image)}" alt="" class="w-11 h-11 rounded-lg object-cover bg-pinktheme-50 border border-pinktheme-100"><div class="flex-1 min-w-0"><p class="text-xs font-bold text-pinktheme-900 truncate">${esc(l.name)}</p><div>${KG.ui.conditionLabel(l.condition)}</div><p class="text-[10px] text-pinktheme-600">Qty ${l.qty} &times; ${peso(l.price)}</p></div><b class="text-xs">${peso(l.subtotal)}</b></div>`).join('');
+  document.getElementById('vSub').textContent=peso(d.subtotal);
+  document.getElementById('vShip').textContent=del?peso(ship):'FREE';
+  document.getElementById('vTotal').textContent=peso(d.subtotal+ship);
+}
+function showErr(m){const e=document.getElementById('formErr'); e.textContent=m; e.classList.remove('hidden'); e.scrollIntoView({behavior:'smooth',block:'center'});}
+function place(){
+  if(placing) return;
+  document.getElementById('formErr').classList.add('hidden');
+  placing=true;
+  const btn=document.getElementById('placeBtn'); btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>Placing order\u2026</span>';
+  setTimeout(()=>{
+    const r=KG.orders.place({name:val('fName'),phone:val('fPhone'),email:val('fEmail'),fulfillment:fulfillment(),branchId:val('fBranch'),address:val('fAddress'),paymentMethod:method(),attemptId});
+    if(!r.ok){ placing=false; btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-lock"></i><span>Confirm &amp; Place Order</span>'; return showErr(r.error); }
+    const o=r.order, t=r.txn||KG.txns.forOrder(o.id);
+    const row=(k,v)=>`<div class="flex justify-between gap-3"><span class="text-pinktheme-600 font-semibold">${k}</span><span class="font-bold text-pinktheme-900 text-right">${v}</span></div>`;
+    document.getElementById('receipt').innerHTML=row('Order ID',`<span class="font-mono">${esc(o.id)}</span>`)+row('Transaction ID',`<span class="font-mono">${esc(o.txnId)}</span>`)+row('Customer',esc(o.customer.name))+
+      row('Fulfillment',o.fulfillment==='delivery'?'Home Delivery':'Pickup: '+esc(o.branch))+row('Payment method',esc(o.payment.label))+row('Payment status',`<span class="chip st-${esc(t.status)}">${esc(t.status)}</span>`)+
+      row('Total (simulated)',`<span class="text-base">${peso(o.total)}</span>`);
+    document.getElementById('goTrack').href='tracking.html#'+o.id;
+    document.getElementById('checkout').classList.add('hidden'); document.getElementById('done').classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'});
+  },30);
+}
+if(KG.guard('customer')) init();
+
+</script>
+</body>
+</html>

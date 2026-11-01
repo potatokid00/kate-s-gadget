@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Kate's Original Gadgets</title>
+    
+    <!-- Plus Jakarta Sans Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],    
+                    },
+                    colors: {
+                        pinktheme: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#881337',
+                            900: '#581c2d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+</head>
+<body class="font-sans min-h-screen flex flex-col selection:bg-pinktheme-200 selection:text-pinktheme-900 bg-[#FFF5F8]">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-50 bg-[#FFF5F8]/90 backdrop-blur-md border-b border-pinktheme-200/80 shadow-sm transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Top Header Row -->
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand Logo -->
+                <a href="index.html" class="flex items-center gap-3 shrink-0">
+                    <div class="w-11 h-11 rounded-xl bg-pinktheme-900 text-white flex items-center justify-center font-extrabold text-xl shadow-md">
+                        <i class="fa-solid fa-mobile-screen-button text-pinktheme-200"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="block text-sm font-black text-pinktheme-900 leading-tight uppercase tracking-wider">Kate's</span>
+                        <span class="block text-[10px] font-bold text-pinktheme-700 uppercase tracking-widest">Original Gadgets</span>
+                    </div>
+                </a>
+
+                <!-- Store Selector Dropdown Button -->
+                <button onclick="window.location.href='index.html'" class="hidden md:flex items-center gap-2 px-3.5 py-1.5 bg-white border border-pinktheme-200 rounded-full text-[11px] font-bold text-pinktheme-900 shadow-sm hover:border-pinktheme-400 transition">
+                    <i class="fa-solid fa-location-dot text-pinktheme-600 text-xs"></i>
+                    <div class="text-left">
+                        <span class="block text-[9px] uppercase font-bold text-pinktheme-400 leading-none">Fulfillment Store</span>
+                        <span class="text-xs font-bold text-pinktheme-900">Abreeza Mall Branch</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-pinktheme-400 ml-1"></i>
+                </button>
+
+                <!-- Search Input Bar -->
+                <div class="flex-1 max-w-md mx-2 sm:mx-4">
+                    <form action="index.html" method="GET" class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-pinktheme-400 text-xs"></i>
+                        <input type="text" name="search" placeholder="Search iPhone, Samsung, AirPods..." class="w-full pl-10 pr-4 py-2 bg-white border border-pinktheme-200 rounded-full text-xs text-pinktheme-900 placeholder-pinktheme-400 focus:outline-none focus:border-pinktheme-500 shadow-sm transition" />
+                    </form>
+                </div>
+
+                <!-- Right Action Icons -->
+                <div class="flex items-center gap-4 text-pinktheme-900">
+                    <a href="index.html" data-customer-only class="p-2 hover:text-pinktheme-600 transition" title="Wishlist">
+                        <i class="fa-regular fa-heart text-lg"></i>
+                    </a>
+
+                    <a href="cart-dashboard.html" data-customer-only class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-pinktheme-100/50 transition" title="Shopping Cart">
+                        <div class="relative">
+                            <i class="fa-solid fa-bag-shopping text-lg text-pinktheme-900"></i>
+                            <span class="absolute -top-1.5 -right-2 bg-pinktheme-800 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center" data-kg-cart-count>0</span>
+                        </div>
+                        <span class="text-xs font-extrabold text-pinktheme-900 hidden sm:inline" data-kg-cart-total>₱0.00</span>
+                    </a>
+
+                    <a href="index.html?login=1" data-kg-account-link class="p-2 hover:text-pinktheme-600 transition" title="Account">
+                        <i class="fa-regular fa-user text-lg"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Category Navigation Row -->
+            <nav class="hidden lg:flex items-center justify-between border-t border-pinktheme-200/60 py-2.5 text-xs font-bold text-pinktheme-800">
+                <a href="index.html" class="hover:text-pinktheme-600 transition">Shop All</a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPhone <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPad <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Laptops & PCs</a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Watch <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPhone Pre-Owned</a>
+                <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Accessories & Chargers</a>
+                
+                <!-- Highlighted Active Link -->
+                
+                <a href="support.html" class="hover:text-pinktheme-600 transition">Support</a>
+                <a href="about.html" class="text-pinktheme-900 font-extrabold border-b-2 border-pinktheme-800 pb-0.5">About Us</a>
+                
+                
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- HERO / TITLE SECTION -->
+    <!-- HERO / TITLE SECTION WITH FEATURED IMAGE -->
+    <section class="py-12 sm:py-16 bg-gradient-to-b from-[#FFF5F8] to-white border-b border-pinktheme-200/50 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            
+            <!-- Left Text Content -->
+            <div class="text-center lg:text-left space-y-4">
+                <span class="inline-block px-3.5 py-1 bg-pinktheme-100 text-pinktheme-900 rounded-full text-[11px] font-extrabold uppercase tracking-wider border border-pinktheme-200">
+                    Official Tech Retailer
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-black text-pinktheme-900 tracking-tight leading-tight">
+                    Authentic Tech.<br /> Premium Service.
+                </h1>
+                <p class="text-xs sm:text-base text-pinktheme-800/80 leading-relaxed font-medium">
+                    Kate's Original Gadgets is your premier retail destination for authentic smartphones, tablets, laptops, audio gear, and premium mobile accessories across 27 nationwide branches.
+                </p>
+                <div class="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                    <a href="index.html" class="px-5 py-2.5 bg-pinktheme-900 text-white rounded-xl font-bold text-xs shadow-md hover:bg-[#441322] transition">
+                        Browse Catalog
+                    </a>
+                    <a href="support.html" class="px-5 py-2.5 bg-white text-pinktheme-900 border border-pinktheme-200 rounded-xl font-bold text-xs hover:border-pinktheme-400 transition">
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Featured Image -->
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-pinktheme-300 to-pinktheme-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+                <img src="kate1.avif" alt="Kate's Original Gadgets" class="relative w-full h-auto rounded-2xl shadow-md border border-pinktheme-200/80 object-cover" />
+            </div>
+
+        </div>
+    </section>
+
+        <!-- STATS COUNTER GRID -->
+        <section class="py-10 bg-white border-b border-pinktheme-200/50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div class="p-4 bg-[#FFF9FB] rounded-2xl border border-pinktheme-200/70">
+                        <div class="text-2xl sm:text-3xl font-black text-pinktheme-900">27+</div>
+                        <div class="text-xs font-bold text-pinktheme-700/80 mt-1">Retail Branches</div>
+                    </div>
+                    <div class="p-4 bg-[#FFF9FB] rounded-2xl border border-pinktheme-200/70">
+                        <div class="text-2xl sm:text-3xl font-black text-pinktheme-900">100%</div>
+                        <div class="text-xs font-bold text-pinktheme-700/80 mt-1">Authentic Guarantee</div>
+                    </div>
+                    <div class="p-4 bg-[#FFF9FB] rounded-2xl border border-pinktheme-200/70">
+                        <div class="text-2xl sm:text-3xl font-black text-pinktheme-900">50K+</div>
+                        <div class="text-xs font-bold text-pinktheme-700/80 mt-1">Satisfied Customers</div>
+                    </div>
+                    <div class="p-4 bg-[#FFF9FB] rounded-2xl border border-pinktheme-200/70">
+                        <div class="text-2xl sm:text-3xl font-black text-pinktheme-900">100%</div>
+                        <div class="text-xs font-bold text-pinktheme-700/80 mt-1">Nationwide Delivery</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUR STORY & VALUES -->
+        <section class="py-16 bg-[#FFF5F8]">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16">
+                    <div class="space-y-4">
+                        <h2 class="text-2xl sm:text-3xl font-black text-pinktheme-900 tracking-tight">
+                            Our Story
+                        </h2>
+                        <p class="text-xs sm:text-sm text-pinktheme-800/80 leading-relaxed font-medium">
+                            Founded with a mission to make genuine mobile technology accessible to every Filipino, Kate's Original Gadgets grew from a boutique gadget store into a trusted retail brand operating in top shopping centers nationwide.
+                        </p>
+                        <p class="text-xs sm:text-sm text-pinktheme-800/80 leading-relaxed font-medium">
+                            Whether you are looking for the latest flagship smartphone, certified pre-owned devices, or essential charging accessories, we back every product with official store warranty and dedicated customer care.
+                        </p>
+                    </div>
+
+                    <!-- Story Card Container -->
+                    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-pinktheme-200/80 shadow-sm space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-pinktheme-900 text-white flex items-center justify-center font-bold text-xl shadow-md">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-pinktheme-900">Why Customers Choose Kate's</h3>
+                        <ul class="space-y-3 text-xs font-semibold text-pinktheme-800/90">
+                            <li class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pinktheme-600 text-sm"></i>
+                                Direct sourcing for guaranteed original products
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pinktheme-600 text-sm"></i>
+                                Flexible payment options (COD, Installments, GCash)
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pinktheme-600 text-sm"></i>
+                                Fast in-store pickup & secure door-to-door courier
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pinktheme-600 text-sm"></i>
+                                Responsive support via Messenger & Phone line
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CORE PILLARS GRID -->
+                <div class="mb-10 text-center">
+                    <h2 class="text-2xl sm:text-3xl font-black text-pinktheme-900 tracking-tight mb-2">
+                        What We Stand For
+                    </h2>
+                    <p class="text-xs sm:text-sm text-pinktheme-800/80 font-medium">
+                        Our commitment to giving you the best device purchasing experience.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-pinktheme-200/80 shadow-sm text-center space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-pinktheme-100 text-pinktheme-900 mx-auto flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-extrabold text-sm text-pinktheme-900">Authenticity Guaranteed</h3>
+                        <p class="text-xs text-pinktheme-800/70 font-medium leading-relaxed">
+                            No knock-offs or counterfeit items. Every product in our catalog comes from authorized distribution lines.
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-pinktheme-200/80 shadow-sm text-center space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-pinktheme-100 text-pinktheme-900 mx-auto flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <h3 class="font-extrabold text-sm text-pinktheme-900">Nationwide Express</h3>
+                        <p class="text-xs text-pinktheme-800/70 font-medium leading-relaxed">
+                            Order online and get your items delivered safely anywhere in Luzon, Visayas, or Mindanao.
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-pinktheme-200/80 shadow-sm text-center space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-pinktheme-100 text-pinktheme-900 mx-auto flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="font-extrabold text-sm text-pinktheme-900">Dedicated Service</h3>
+                        <p class="text-xs text-pinktheme-800/70 font-medium leading-relaxed">
+                            Our team is ready to assist you with order tracking, device warranty claims, and store inquiries.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="py-14 bg-pinktheme-900 text-white text-center px-4">
+            <div class="max-w-2xl mx-auto space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-black">Ready to Upgrade Your Tech?</h2>
+                <p class="text-xs sm:text-sm text-pinktheme-200/90 font-medium">
+                    Explore our catalog for the latest devices or reach out to our team for assistance.
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                    <a href="index.html" class="px-6 py-3 bg-white text-pinktheme-900 rounded-xl font-bold text-xs shadow-md hover:bg-pinktheme-50 transition">
+                        Shop Products
+                    </a>
+                    <a href="support.html" class="px-6 py-3 bg-pinktheme-800 text-white rounded-xl font-bold text-xs border border-pinktheme-700 hover:bg-pinktheme-700 transition">
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#FFF5F8] border-t border-pinktheme-200/80 text-pinktheme-800 text-xs py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                
+                <!-- Col 1: Store Intro -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-pinktheme-900 font-extrabold text-base">
+                        <i class="fa-solid fa-mobile-screen-button text-pinktheme-600"></i> Kate's Original Gadgets
+                    </div>
+                    <p class="text-xs text-pinktheme-800/80 leading-relaxed font-medium">
+                        Your trusted gadget store, now with full store pickup and delivery nationwide! Authentic smartphones, audio gear, and tech accessories with store warranty.
+                    </p>
+                </div>
+
+                <!-- Col 2: Locations -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">Store Locations</h4>
+                    <ul class="space-y-2 text-pinktheme-800/90 font-medium">
+                        <li>Greenhills Promenade Flagship</li>
+                        <li>SM Megamall Cyberzone</li>
+                        <li>SM Mall of Asia Branch</li>
+                        <li>SM Lanang Premier Davao</li>
+                        <li>Abreeza Mall Davao Branch</li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Accepted Payments -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">Accepted Payments</h4>
+                    <div class="flex flex-wrap gap-2 text-pinktheme-900 font-bold text-xs">
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Cash on Delivery (COD)</span>
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">GCash / PayMaya</span>
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Bank Transfer</span>
+                    </div>
+                </div>
+
+                <!-- Col 4: Support Contact -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">CUSTOMER SUPPORT</h4>
+                    
+                    <a href="tel:09558844392" class="flex items-center gap-2 text-xs font-bold text-pinktheme-900 hover:text-pinktheme-700 transition mb-3 group">
+                        <div class="w-6 h-6 rounded-lg bg-white border border-pinktheme-200 flex items-center justify-center text-pinktheme-700 group-hover:bg-pinktheme-900 group-hover:text-white transition">
+                            <i class="fa-solid fa-phone text-[10px]"></i>
+                        </div>
+                        <span>0955 884 4392</span>
+                    </a>
+
+                    <a href="https://m.me/katesoriginalgadgets" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-pinktheme-900 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-[#441322] transition">
+                        <i class="fa-brands fa-facebook-messenger"></i> Message Kate's Gadgets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-pinktheme-200/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-pinktheme-800/70 text-[11px] font-medium">
+                <p>&copy; 2026 Kate's Original Gadgets. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

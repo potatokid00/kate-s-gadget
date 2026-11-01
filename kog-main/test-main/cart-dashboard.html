@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+<script>KG.guard('shopper');</script>
+<style>
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}
+.in{width:100%;padding:.6rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none;color:#3D1223}
+.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}
+.btn{padding:.6rem 1rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:#7B314E;color:#fff}.btn-p:hover:not(:disabled){background:#592037}
+.btn-s{background:#fff;border:1px solid #F8DDE5;color:#592037}.btn-s:hover:not(:disabled){background:#FCEEF2}
+.chip{font-size:10px;font-weight:800;padding:.15rem .6rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}
+.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}
+.td{padding:.65rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.skeleton{background:linear-gradient(90deg,#FCEEF2 25%,#F8DDE5 50%,#FCEEF2 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:1rem}@keyframes sk{to{background-position:-200% 0}}
+img{max-width:100%}
+
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+<div class="flex items-center gap-3 mb-6">
+  <a href="index.html"><img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 rounded-xl"></a>
+  <div><h1 class="text-xl sm:text-2xl font-extrabold text-pinktheme-900 leading-tight">Shopping Cart</h1><p class="text-xs text-pinktheme-600">Review your items, adjust quantities and continue to checkout</p></div>
+</div>
+
+<div id="notes" class="space-y-2 mb-4"></div>
+<div class="grid lg:grid-cols-3 gap-6 items-start">
+  <section class="lg:col-span-2 card p-4 sm:p-5" aria-label="Cart items">
+    <div id="lines"><div class="skeleton h-24 mb-3"></div><div class="skeleton h-24"></div></div>
+  </section>
+  <aside class="card p-5 lg:sticky lg:top-4" aria-label="Order summary">
+    <h2 class="text-sm font-extrabold text-pinktheme-900 mb-3">Order summary</h2>
+    <div class="space-y-2 text-xs">
+      <div class="flex justify-between"><span>Items</span><b id="sCount">0</b></div>
+      <div class="flex justify-between"><span>Subtotal</span><b id="sSub">&#8369;0.00</b></div>
+      <div class="flex justify-between text-pinktheme-600"><span>Shipping</span><span>Free pickup &middot; &#8369;150 delivery (chosen at checkout)</span></div>
+      <div class="flex justify-between text-base font-extrabold text-pinktheme-900 pt-3 border-t border-pinktheme-200"><span>Total</span><span id="sTotal">&#8369;0.00</span></div>
+    </div>
+    <p id="who" class="text-[11px] text-pinktheme-600 mt-3"></p>
+    <div class="kg-sim mt-3"><i class="fa-solid fa-flask mr-1"></i>Demo store: payments are simulated.</div>
+    <button id="checkoutBtn" class="btn btn-p w-full mt-4" onclick="proceed()"><i class="fa-solid fa-lock"></i> Proceed to Checkout</button>
+    <a href="index.html#catalog" class="btn btn-s w-full mt-2"><i class="fa-solid fa-arrow-left"></i> Continue Shopping</a>
+  </aside>
+</div>
+</main>
+<footer class="text-center text-[11px] text-pinktheme-700/70 py-6 border-t border-pinktheme-200">&copy; 2026 Kate's Original Gadgets &middot; Demo project: all payments are simulated and no real money is charged.</footer>
+<script>
+
+const {esc,peso}=KG.util;
+let reconciled=false;
+function render(){
+  if(!reconciled){ reconciled=true; const n=KG.cart.reconcile(); if(n.length) document.getElementById('notes').innerHTML=n.map(t=>`<div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${esc(t)}</div>`).join(''); }
+  const d=KG.cart.detailed(), u=KG.auth.currentUser();
+  document.getElementById('sCount').textContent=d.count;
+  document.getElementById('sSub').textContent=peso(d.subtotal);
+  document.getElementById('sTotal').textContent=peso(d.subtotal);
+  document.getElementById('who').innerHTML=u?`<i class="fa-solid fa-user-check mr-1"></i>This cart is saved to <b>${esc(u.email)}</b>.`:`<i class="fa-regular fa-circle-user mr-1"></i>You are browsing as a guest. Sign in at checkout &mdash; your items will move to your account.`;
+  document.getElementById('checkoutBtn').disabled=!d.lines.length;
+  const el=document.getElementById('lines');
+  if(!d.lines.length){ el.innerHTML=`<div class="text-center py-14"><i class="fa-solid fa-bag-shopping text-4xl text-pinktheme-300 mb-3"></i><p class="text-sm font-extrabold text-pinktheme-900">Your cart is empty</p><p class="text-xs text-pinktheme-600 mt-1 mb-4">Add something you love from the shop.</p><a href="index.html#catalog" class="btn btn-p">Browse products</a></div>`; return; }
+  el.innerHTML=d.lines.map(l=>`
+  <div class="flex gap-3 sm:gap-4 py-4 border-b border-pinktheme-100 last:border-0 fade ${l.issue?'bg-red-50/60 rounded-xl px-2':''}">
+    <img src="${esc(l.image)}" alt="${esc(l.name)}" class="w-20 h-20 object-cover rounded-xl bg-pinktheme-50 border border-pinktheme-100 shrink-0">
+    <div class="flex-1 min-w-0">
+      <h3 class="text-xs sm:text-sm font-extrabold text-pinktheme-900 leading-snug">${esc(l.name)}</h3>
+      <div class="mt-1">${KG.ui.conditionLabel(l.condition)}</div>
+      <p class="text-xs text-pinktheme-600 mt-0.5">${peso(l.price)} each</p>
+      ${l.issue?`<p class="text-[11px] font-bold text-red-600 mt-1">${l.issue==='over'?'Only '+l.stock+' in stock \u2013 please lower the quantity.':'This item is no longer available.'}</p>`:''}
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-3">
+        <div class="flex items-center gap-1.5">
+          <button class="btn btn-s !px-2.5 !py-1" onclick="chg(${l.id},-1)" aria-label="Decrease quantity">&minus;</button>
+          <input type="number" min="1" max="${l.stock}" value="${l.qty}" class="in !w-14 text-center !py-1" onchange="setq(${l.id},this.value)" aria-label="Quantity">
+          <button class="btn btn-s !px-2.5 !py-1" onclick="chg(${l.id},1)" ${l.qty>=l.stock?'disabled':''} aria-label="Increase quantity">+</button>
+          <span class="text-[10px] text-pinktheme-600 ml-1">${l.stock} in stock</span>
+        </div>
+        <div class="flex items-center gap-3"><b class="text-sm text-pinktheme-900">${l.issue?'&mdash;':peso(l.subtotal)}</b>
+          <button class="text-xs font-bold text-pinktheme-500 hover:text-red-600" onclick="rm(${l.id})"><i class="fa-regular fa-trash-can"></i> Remove</button></div>
+      </div>
+    </div>
+  </div>`).join('');
+}
+function chg(id,d){const r=KG.cart.change(id,d); if(!r.ok) KG.ui.toast(r.error,'error');}
+function setq(id,v){const r=KG.cart.setQty(id,v); if(!r.ok){KG.ui.toast(r.error,'error'); render();}}
+async function rm(id){ KG.cart.remove(id); KG.ui.toast('Item removed.','info'); }
+function proceed(){
+  const n=KG.cart.reconcile(); if(n.length){ KG.ui.toast(n[0],'error'); return render(); }
+  if(!KG.cart.count()) return KG.ui.toast('Your cart is empty.','error');
+  if(!KG.auth.currentUser()){ sessionStorage.setItem('kg_after_login','checkout.html'); location.href='index.html?login=1'; return; }
+  location.href='checkout.html';
+}
+window.addEventListener('kg:change',render);
+if(KG.guard('shopper')) render();
+
+</script>
+</body>
+</html>

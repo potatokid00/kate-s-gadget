@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Dashboard | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Shared core + access control: the page stays hidden and redirects unless the signed-in account is Kate's administrator account -->
+<script src="kg.js"></script>
+<script>KG.guard('admin');</script>
+<style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.in{width:100%;padding:.55rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none}.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}.btn{padding:.5rem .9rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}
+.p{background:#7B314E;color:#fff}.p:hover:not(:disabled){background:#592037}.s{background:#fff;border:1px solid #F8DDE5}.s:hover:not(:disabled){background:#FCEEF2}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}.td{padding:.6rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.chip{font-size:10px;font-weight:800;padding:.15rem .55rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.fade{animation:fade .2s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#modal>div{max-width:100%}</style>
+</head>
+<body class="min-h-screen">
+<header class="sticky top-0 z-30 bg-pinktheme-50/90 backdrop-blur border-b border-pinktheme-200">
+ <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+  <div class="flex items-center gap-3 min-w-0"><img src="kate.jpg" class="h-10 rounded-lg" alt="Kate's"><div class="leading-tight min-w-0"><b class="text-sm">Staff Dashboard</b><span class="block text-[10px] text-pinktheme-600 truncate">Orders · Transactions · Products · Inventory · Customers</span></div></div>
+  <div class="flex gap-2 shrink-0"><button class="btn s" onclick="pwModal()"><i class="fa-solid fa-key mr-1"></i><span class="hidden sm:inline">Password</span></button><a href="index.html" class="btn s"><i class="fa-solid fa-store mr-1"></i><span class="hidden sm:inline">Storefront</span></a></div>
+ </div>
+ <nav id="tabs" class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto pb-2" aria-label="Dashboard sections"></nav>
+</header>
+<main id="main" class="max-w-7xl mx-auto px-4 py-6"></main>
+<div id="modal" class="fixed inset-0 z-50 hidden items-start sm:items-center justify-center p-4 overflow-y-auto" style="background:rgba(89,32,55,.4);backdrop-filter:blur(6px)" role="dialog" aria-modal="true"></div>
+<div id="toast" class="hidden"></div>
+<script>
+const {esc,peso,fmtDateTime,fmtDate}=KG.util;
+const CATS=KG.CATEGORY_IDS, CONDS=KG.CONDITIONS, STAGES=KG.STAGES;
+var $=s=>document.querySelector(s);
+const toast=(m,t)=>KG.ui.toast(m,t||'info');
+const dk=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fd=d=>new Date(d).toLocaleDateString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+const TABS=[['overview','fa-gauge','Overview'],['orders','fa-receipt','Orders'],['transactions','fa-money-check-dollar','Transactions'],['products','fa-box','Products'],['inventory','fa-cubes','Inventory'],['customers','fa-users','Customers'],['inquiries','fa-envelope','Inquiries'],['sales','fa-chart-column','Sales reports']];
+var view=(location.hash||'#overview').slice(1), sel=null, qf='all', range=30, pq='', oq='', of='all', tq='', tf='all', cq='';
+var mod=null;   // {type,id} of the open modal
+/* ---- data snapshot used by one render (all reads go through KG, which re-checks the administrator) ---- */
+function D(){
+  const orders=KG.orders.all(), txns=KG.txns.all(), products=KG.catalog.all(), customers=KG.auth.customers();
+  const tByOrder={}; txns.forEach(t=>{ if(t.orderId) tByOrder[t.orderId]=t; });
+  return {orders,txns,products,customers,tByOrder,Q:KG.inquiries.all()};
+}
+const active=o=>!o.cancelled&&o.stageIndex<STAGES.length-1;
+const paidSum=d=>d.txns.filter(t=>t.status==='Paid').reduce((s,t)=>s+t.amount,0);
+const avail=p=>p.stock<=0?['Out of stock','bg-red-100 text-red-700']:p.stock<=p.lowAt?['Low stock','bg-amber-100 text-amber-700']:['In stock','bg-emerald-100 text-emerald-700'];
+const kpi=(l,v,i,sub='')=>`<div class="card p-4"><div class="flex justify-between text-pinktheme-600 text-[11px] font-bold uppercase">${l}<i class="fa-solid ${i}"></i></div><div class="text-2xl font-black mt-1">${v}</div><div class="text-[11px] text-pinktheme-600/70">${sub}</div></div>`;
+const bars=(days,h=140)=>{const m=Math.max(1,...days.map(d=>d.v));return `<div class="flex items-end gap-1" style="height:${h}px">${days.map(d=>`<div class="flex-1 group relative bg-pinktheme-100 rounded-t" style="height:${Math.max(2,d.v/m*100)}%" title="${esc(d.l)}: ${peso(d.v)}"><div class="absolute inset-0 rounded-t bg-pinktheme-600 opacity-80 group-hover:opacity-100"></div></div>`).join('')}</div><div class="flex justify-between text-[10px] text-pinktheme-600/70 mt-1"><span>${esc(days[0].l)}</span><span>${esc(days[days.length-1].l)}</span></div>`};
+function daily(n,items){const out=[];for(let i=n-1;i>=0;i--){const d=new Date(Date.now()-i*864e5),k=dk(d);out.push({l:d.toLocaleDateString('en-PH',{month:'short',day:'numeric'}),v:items.filter(x=>dk(x.at)==k).reduce((s,x)=>s+x.v,0)})}return out}
+const empty=t=>`<div class="text-center text-xs text-pinktheme-600/70 py-8">${t}</div>`;
+const stChip=s=>`<span class="chip ${{new:'bg-pinktheme-600 text-white',replied:'bg-sky-100 text-sky-700',resolved:'bg-emerald-100 text-emerald-700'}[s]}">${esc(s)}</span>`;
+const payChip=s=>`<span class="chip st-${esc(s)}">${esc(s)}</span>`;
+const ordChip=o=>{const s=KG.orderStatus(o);return `<span class="chip ${o.cancelled?'st-Cancelled':s==='Delivered'?'st-Delivered':'st-stage'}">${esc(s)}</span>`};
+const sim=`<div class="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs"><i class="fa-solid fa-flask mr-1"></i><b>Simulated payments.</b> This demo has no payment gateway: every amount below is a demonstration record and no real money moved.</div>`;
+
+const V={
+overview(){const d=D(),pend=d.orders.filter(active),done=d.orders.filter(o=>!o.cancelled&&o.stageIndex===STAGES.length-1),low=d.products.filter(p=>p.stock<=p.lowAt),units=d.products.reduce((s,p)=>s+p.stock,0),nq=d.Q.filter(q=>q.status=='new');
+ const paid=d.txns.filter(t=>t.status==='Paid').map(t=>({at:t.createdAt,v:t.amount})), awaiting=d.txns.filter(t=>t.status==='Pending'||t.status==='Processing').length;
+ return `${sim}<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">${kpi('Registered customers',d.customers.length,'fa-users','customer accounts')}${kpi('Total products',d.products.length,'fa-box',d.products.filter(p=>p.status=='published').length+' published')}${kpi('Available inventory',units,'fa-cubes','units on hand')}${kpi('Simulated sales',peso(paidSum(d)),'fa-peso-sign','Paid transactions only')}</div>
+ <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">${kpi('Total orders',d.orders.length,'fa-receipt',d.orders.filter(o=>o.cancelled).length+' cancelled')}${kpi('Pending orders',pend.length,'fa-hourglass-half','not yet delivered')}${kpi('Completed orders',done.length,'fa-circle-check','delivered')}${kpi('Awaiting payment',awaiting,'fa-clock','Pending / Processing')}</div>
+ <div class="grid lg:grid-cols-3 gap-4"><div class="card p-5 lg:col-span-2"><b class="text-sm">Simulated sales · last 14 days</b><div class="mt-4">${bars(daily(14,paid))}</div></div>
+ <div class="card p-5"><b class="text-sm">Stock alerts</b><div class="mt-2">${low.length?low.map(p=>`<div class="flex justify-between items-center py-2 border-t border-pinktheme-100 first:border-0 text-xs"><span class="truncate pr-2">${esc(p.name)}</span><span class="chip ${avail(p)[1]}">${p.stock} left</span></div>`).join(''):empty('All stock levels look healthy.')}</div></div>
+ <div class="card p-5 lg:col-span-3 overflow-x-auto"><div class="flex justify-between mb-2"><b class="text-sm">Recent transactions</b><a href="#transactions" class="text-xs font-bold text-pinktheme-600 underline">View all</a></div>
+ <table class="w-full min-w-[560px]"><thead><tr><th class="th">Transaction</th><th class="th">Date</th><th class="th">Customer</th><th class="th">Amount</th><th class="th">Status</th></tr></thead><tbody>${d.txns.slice(0,6).map(t=>{const o=d.orders.find(x=>x.id===t.orderId);return `<tr class="cursor-pointer hover:bg-pinktheme-50" onclick="openT('${esc(t.id)}')"><td class="td font-mono font-bold">${esc(t.id)}</td><td class="td">${fd(t.createdAt)}</td><td class="td">${esc(o?o.customer.name:'\u2014')}</td><td class="td font-bold">${peso(t.amount)}</td><td class="td">${payChip(t.status)}</td></tr>`}).join('')||`<tr><td colspan="5">${empty('No transactions yet. They appear when customers place orders.')}</td></tr>`}</tbody></table></div>
+ <div class="card p-5 lg:col-span-3"><div class="flex justify-between"><b class="text-sm">Latest inquiries</b><a href="#inquiries" class="text-xs font-bold text-pinktheme-600 underline">Open inbox (${nq.length} new)</a></div>${d.Q.length?d.Q.slice(0,4).map(q=>`<div class="flex justify-between gap-3 py-2 border-t border-pinktheme-100 text-xs"><span><b>${esc(q.name)}</b> · ${esc(q.concern)}<span class="block text-pinktheme-600/70 truncate max-w-xl">${esc(q.message)}</span></span>${stChip(q.status)}</div>`).join(''):empty('No inquiries yet.')}</div></div>`},
+
+orders(){const d=D(),q=oq.toLowerCase();
+ const l=d.orders.filter(o=>(of=='all'||(of=='active'?active(o):of=='cancelled'?!!o.cancelled:(!o.cancelled&&STAGES[o.stageIndex]==of)))&&(!q||o.id.toLowerCase().includes(q)||o.customer.name.toLowerCase().includes(q)||(o.customer.phone||'').includes(q)));
+ return `${sim}<div class="flex flex-wrap gap-2 mb-3"><input class="in !w-auto flex-1 min-w-[200px]" id="os" placeholder="Search order ID, customer, phone…" value="${esc(oq)}" oninput="oq=this.value;render(true)"><select class="in !w-auto" onchange="of=this.value;render()"><option value="all">All orders (${d.orders.length})</option><option value="active" ${of=='active'?'selected':''}>Pending (not delivered)</option>${STAGES.map(s=>`<option ${of==s?'selected':''}>${s}</option>`).join('')}<option value="cancelled" ${of=='cancelled'?'selected':''}>Cancelled</option></select></div>
+ <div class="card overflow-x-auto"><table class="w-full min-w-[860px]"><thead><tr><th class="th">Order</th><th class="th">Customer</th><th class="th">Items</th><th class="th">Total</th><th class="th">Payment</th><th class="th">Delivery status</th><th class="th">Estimate</th><th class="th"></th></tr></thead><tbody>${l.map(o=>{const t=d.tByOrder[o.id];return `<tr class="hover:bg-pinktheme-50"><td class="td"><b class="font-mono">${esc(o.id)}</b><span class="block text-[10px] text-pinktheme-600/70">${fd(o.createdAt)}</span></td><td class="td">${esc(o.customer.name)}<span class="block text-[10px] text-pinktheme-600/70">${esc(o.customer.phone)}</span></td><td class="td max-w-[220px]"><span class="block truncate">${esc(o.items.map(i=>i.name+' ×'+i.qty).join(', '))}</span></td><td class="td font-bold">${peso(o.total)}</td><td class="td">${t?payChip(t.status):'—'}</td><td class="td">${ordChip(o)}</td><td class="td">${o.estimatedDelivery?fmtDate(o.estimatedDelivery):'<span class="text-pinktheme-600/60">Not set</span>'}</td><td class="td text-right"><button class="btn s" onclick="openO('${esc(o.id)}')">Manage</button></td></tr>`}).join('')||`<tr><td colspan="8">${empty(d.orders.length?'No orders match your filters.':'No orders yet. Customer orders placed in this browser appear here.')}</td></tr>`}</tbody></table></div>`},
+
+transactions(){const d=D(),q=tq.toLowerCase(),l=d.txns.filter(t=>(tf=='all'||t.status==tf)&&(!q||t.id.toLowerCase().includes(q)||String(t.orderId).toLowerCase().includes(q)));
+ const c=s=>d.txns.filter(t=>t.status===s).length;
+ return `${sim}<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">${kpi('Simulated sales',peso(paidSum(d)),'fa-peso-sign',c('Paid')+' paid')}${kpi('Awaiting confirmation',c('Pending')+c('Processing'),'fa-clock','Pending + Processing')}${kpi('Failed',c('Failed'),'fa-circle-xmark')}${kpi('Refunded',c('Refunded'),'fa-rotate-left')}</div>
+ <div class="flex flex-wrap gap-2 mb-3"><input class="in !w-auto flex-1 min-w-[200px]" id="ts" placeholder="Search transaction or order ID…" value="${esc(tq)}" oninput="tq=this.value;render(true)"><select class="in !w-auto" onchange="tf=this.value;render()"><option value="all">All statuses</option>${KG.PAY_STATUSES.map(s=>`<option ${tf==s?'selected':''}>${s}</option>`).join('')}</select></div>
+ <div class="card overflow-x-auto"><table class="w-full min-w-[760px]"><thead><tr><th class="th">Transaction</th><th class="th">Date</th><th class="th">Order</th><th class="th">Customer</th><th class="th">Method</th><th class="th">Amount</th><th class="th">Status</th><th class="th"></th></tr></thead><tbody>${l.map(t=>{const o=d.orders.find(x=>x.id===t.orderId);return `<tr class="hover:bg-pinktheme-50"><td class="td font-mono font-bold">${esc(t.id)}</td><td class="td">${fd(t.createdAt)}</td><td class="td font-mono">${esc(t.orderId)}</td><td class="td">${esc(o?o.customer.name:'—')}</td><td class="td">${esc(t.methodLabel)}</td><td class="td font-bold">${peso(t.amount)}</td><td class="td">${payChip(t.status)}</td><td class="td text-right"><button class="btn s" onclick="openT('${esc(t.id)}')">Details</button></td></tr>`}).join('')||`<tr><td colspan="8">${empty(d.txns.length?'No transactions match your filters.':'No transactions yet.')}</td></tr>`}</tbody></table></div>`},
+
+products(){const d=D(),l=d.products.filter(p=>p.name.toLowerCase().includes(pq));
+ return `<div class="flex flex-wrap gap-2 justify-between mb-4"><input class="in max-w-xs" placeholder="Search products…" value="${esc(pq)}" oninput="pq=this.value.toLowerCase();render(true)" id="ps"><button class="btn p" onclick="editP()"><i class="fa-solid fa-plus mr-1"></i> Add product</button></div>
+ <div class="card overflow-x-auto"><table class="w-full min-w-[720px]"><thead><tr><th class="th">Product</th><th class="th">Category</th><th class="th">Condition</th><th class="th">Price</th><th class="th">Stock</th><th class="th">Listing</th><th class="th"></th></tr></thead><tbody>${l.map(p=>`<tr><td class="td"><div class="flex items-center gap-2"><img src="${esc(p.image)}" class="w-10 h-10 rounded-lg object-cover bg-pinktheme-50 border border-pinktheme-100" alt=""><span><b class="block max-w-[240px] truncate">${esc(p.name)}</b><span class="text-[10px] text-pinktheme-600/70">${esc(p.sku)}</span></span></div></td><td class="td capitalize">${esc(p.category)}</td><td class="td">${KG.ui.conditionLabel(p.condition)}</td><td class="td font-bold">${peso(p.price)}</td><td class="td"><span class="chip ${avail(p)[1]}">${p.stock}</span></td><td class="td"><span class="chip ${p.status=='published'?'bg-emerald-100 text-emerald-700':'bg-gray-100 text-gray-600'}">${p.status}</span></td><td class="td text-right whitespace-nowrap"><button class="btn s" onclick="editP(${p.id})" aria-label="Edit"><i class="fa-solid fa-pen"></i></button> <button class="btn s text-red-600" onclick="delP(${p.id})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('')||`<tr><td colspan="7">${empty('No products found.')}</td></tr>`}</tbody></table></div>`},
+
+inventory(){const P=KG.catalog.all(),units=P.reduce((t,p)=>t+p.stock,0),val=P.reduce((t,p)=>t+p.stock*p.price,0);
+ return `<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">${kpi('Units on hand',units,'fa-cubes')}${kpi('Stock value',peso(val),'fa-peso-sign','at retail price')}${kpi('Low stock',P.filter(p=>p.stock>0&&p.stock<=p.lowAt).length,'fa-battery-quarter')}${kpi('Out of stock',P.filter(p=>p.stock<=0).length,'fa-ban')}</div>
+ <div class="card overflow-x-auto"><table class="w-full min-w-[640px]"><thead><tr><th class="th">Item</th><th class="th">Condition grade</th><th class="th">Stock</th><th class="th">Alert at</th><th class="th">Availability</th></tr></thead><tbody>${P.map(p=>`<tr><td class="td"><b>${esc(p.name)}</b><span class="block text-[10px] text-pinktheme-600/70">${esc(p.sku)}</span></td><td class="td"><div class="mb-1">${KG.ui.conditionPill(p.condition)}</div><select class="in !w-auto" onchange="inv(${p.id},'condition',this.value)">${CONDS.map(c=>`<option ${c==p.condition?'selected':''}>${esc(c)}</option>`).join('')}</select></td><td class="td"><div class="flex items-center gap-1"><button class="btn s !px-2.5" onclick="inv(${p.id},'stock',${Math.max(0,p.stock-1)})" aria-label="Decrease">−</button><input type="number" min="0" class="in !w-16 text-center" value="${p.stock}" onchange="inv(${p.id},'stock',this.value)"><button class="btn s !px-2.5" onclick="inv(${p.id},'stock',${p.stock+1})" aria-label="Increase">+</button></div></td><td class="td"><input type="number" min="0" class="in !w-16" value="${p.lowAt}" onchange="inv(${p.id},'lowAt',this.value)"></td><td class="td"><span class="chip ${avail(p)[1]}">${avail(p)[0]}</span>${p.status!='published'?' <span class="chip bg-gray-100 text-gray-600">hidden</span>':''}</td></tr>`).join('')}</tbody></table></div><p class="text-[11px] text-pinktheme-600/70 mt-2">Stock drops automatically when a customer places an order and is restored if the order is cancelled. Sold-out items can’t be added to a cart.</p>`},
+
+customers(){const d=D(),q=cq.toLowerCase(),l=d.customers.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.includes(q));
+ return `<div class="flex flex-wrap gap-2 mb-3"><input class="in max-w-xs" id="cs" placeholder="Search customers…" value="${esc(cq)}" oninput="cq=this.value;render(true)"></div>
+ <div class="card overflow-x-auto"><table class="w-full min-w-[700px]"><thead><tr><th class="th">Customer</th><th class="th">Contact</th><th class="th">Joined</th><th class="th">Orders</th><th class="th">Simulated spend</th><th class="th"></th></tr></thead><tbody>${l.map(c=>{const os=d.orders.filter(o=>o.userId===c.id),spent=d.txns.filter(t=>t.userId===c.id&&t.status==='Paid').reduce((s,t)=>s+t.amount,0);return `<tr class="hover:bg-pinktheme-50"><td class="td"><b>${esc(c.name)}</b></td><td class="td">${esc(c.email)}<span class="block text-[10px] text-pinktheme-600/70">${esc(c.phone||'No phone saved')}</span></td><td class="td">${fmtDate(c.createdAt)}</td><td class="td">${os.length}</td><td class="td font-bold">${peso(spent)}</td><td class="td text-right"><button class="btn s" onclick="openC('${esc(c.id)}')">View</button></td></tr>`}).join('')||`<tr><td colspan="6">${empty(d.customers.length?'No customers match your search.':'No customers have registered yet.')}</td></tr>`}</tbody></table></div>`},
+
+inquiries(){const Q=KG.inquiries.all(),f=Q.filter(q=>qf=='all'||(qf=='purchase'?q.type=='purchase':q.status==qf)),c=Q.find(q=>q.id==sel)||f[0];
+ const T=['Thanks for reaching out! Yes, that item is available. Would you like us to reserve it for pickup?','Your order is being prepared and we’ll update you as soon as it ships.','Thanks for your message. Please bring your receipt to any Kate’s branch and we’ll gladly assist.'];window.T_=T;
+ return `<div class="flex gap-1 mb-3 overflow-x-auto">${[['all','All'],['new','New'],['replied','Replied'],['resolved','Resolved'],['purchase','Purchase requests']].map(([k,l])=>`<button onclick="qf='${k}';sel=null;render()" class="btn ${qf==k?'p':'s'} whitespace-nowrap">${l} <span class="opacity-70">${Q.filter(q=>k=='all'||(k=='purchase'?q.type=='purchase':q.status==k)).length}</span></button>`).join('')}</div>
+ <div class="grid lg:grid-cols-5 gap-4"><div class="card lg:col-span-2 max-h-[640px] overflow-y-auto">${f.map(q=>`<div onclick="sel='${esc(q.id)}';render()" class="p-3 border-b border-pinktheme-100 cursor-pointer hover:bg-pinktheme-50 ${c&&c.id==q.id?'bg-pinktheme-100':''}"><div class="flex justify-between gap-2"><b class="text-xs">${esc(q.name)}</b>${stChip(q.status)}</div><div class="text-[11px] text-pinktheme-700">${esc(q.concern)}${q.type=='purchase'?' · <i class="fa-solid fa-cart-shopping"></i>':''}</div><div class="text-[11px] text-pinktheme-600/70 truncate">${esc(q.message)}</div><div class="text-[10px] text-pinktheme-600/50 mt-1">${fd(q.createdAt)}</div></div>`).join('')||empty('No inquiries here.')}</div>
+ <div class="card lg:col-span-3 p-5">${c?`<div class="flex flex-wrap justify-between gap-2"><div><b>${esc(c.name)}</b><div class="text-[11px] text-pinktheme-600"><a class="underline" href="mailto:${esc(c.email)}">${esc(c.email)}</a> · <a class="underline" href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div><select class="in !w-auto" onchange="setQ('${esc(c.id)}',this.value)">${['new','replied','resolved'].map(s=>`<option ${s==c.status?'selected':''}>${s}</option>`).join('')}</select></div>
+ <div class="mt-3 text-[11px] font-bold text-pinktheme-600">${esc(c.concern)} · ${fd(c.createdAt)}</div><div class="mt-1 p-3 rounded-xl bg-pinktheme-50 text-xs whitespace-pre-wrap">${esc(c.message)}</div>
+ ${(c.replies||[]).map(r=>`<div class="mt-2 p-3 rounded-xl bg-pinktheme-700 text-white text-xs ml-8 whitespace-pre-wrap">${esc(r.text)}<div class="text-[10px] opacity-70 mt-1">You · ${fd(r.at)}</div></div>`).join('')}
+ <div class="mt-4"><div class="flex flex-wrap gap-1 mb-2">${T.map((t,i)=>`<button class="chip bg-pinktheme-100 hover:bg-pinktheme-200" onclick="$('#rt').value=T_[${i}]">Template ${i+1}</button>`).join('')}</div><textarea id="rt" rows="4" class="in" placeholder="Write a reply…"></textarea><div class="flex items-center justify-between mt-2 gap-2"><span class="text-[10px] text-pinktheme-600/70">Saves to this thread and opens your email app with the reply ready.</span><button class="btn p" onclick="reply('${esc(c.id)}')"><i class="fa-solid fa-paper-plane mr-1"></i> Send reply</button></div></div>`:empty('Select an inquiry to view it.')}</div></div>`},
+
+sales(){const d=D(),cut=range?Date.now()-range*864e5:0,inR=o=>new Date(o.createdAt)>=cut;
+ const o=d.orders.filter(inR),l=o.filter(x=>d.tByOrder[x.id]&&d.tByOrder[x.id].status==='Paid'),rev=l.reduce((t,x)=>t+x.total,0),units=l.reduce((t,x)=>t+x.items.reduce((a,i)=>a+i.qty,0),0);
+ const byP={},byC={};l.forEach(x=>x.items.forEach(i=>{byP[i.name]=byP[i.name]||{q:0,v:0};byP[i.name].q+=i.qty;byP[i.name].v+=i.price*i.qty;const p=d.products.find(z=>String(z.id)===String(i.id)),c=p?p.category:'other';byC[c]=(byC[c]||0)+i.price*i.qty}));
+ const top=Object.entries(byP).sort((a,b)=>b[1].v-a[1].v).slice(0,5),cm=Math.max(1,...Object.values(byC)),n=Math.min(range||30,30);
+ return `${sim}<div class="flex gap-1 mb-3">${[[7,'7 days'],[30,'30 days'],[90,'90 days'],[0,'All time']].map(([n,l])=>`<button class="btn ${range==n?'p':'s'}" onclick="range=${n};render()">${l}</button>`).join('')}</div>
+ <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">${kpi('Simulated sales',peso(rev),'fa-peso-sign','orders with Paid status')}${kpi('Paid orders',l.length,'fa-receipt',o.length-l.length+' not paid / cancelled')}${kpi('Avg. order',peso(l.length?rev/l.length:0),'fa-chart-line')}${kpi('Units sold',units,'fa-box-open')}</div>
+ <div class="grid lg:grid-cols-3 gap-4 mb-4"><div class="card p-5 lg:col-span-2"><b class="text-sm">Daily sales · last ${n} days</b><div class="mt-4">${bars(daily(n,l.map(x=>({at:x.createdAt,v:x.total}))))}</div></div>
+ <div class="card p-5"><b class="text-sm">By category</b><div class="mt-3 space-y-2">${Object.entries(byC).map(([c,v])=>`<div class="text-xs"><div class="flex justify-between capitalize"><span>${esc(c)}</span><b>${peso(v)}</b></div><div class="h-2 rounded bg-pinktheme-100"><div class="h-2 rounded bg-pinktheme-600" style="width:${v/cm*100}%"></div></div></div>`).join('')||empty('No paid sales in this period.')}</div></div></div>
+ <div class="card p-5"><b class="text-sm">Top products</b>${top.map(([nm,t],i)=>`<div class="flex justify-between gap-2 py-2 border-t border-pinktheme-100 text-xs"><span class="truncate">${i+1}. ${esc(nm)}</span><b>${t.q} · ${peso(t.v)}</b></div>`).join('')||empty('—')}</div>`}
+};
+
+/* ---------------- rendering ---------------- */
+function render(keepFocus){
+  if(!V[view]) view='overview';
+  $('#tabs').innerHTML=TABS.map(([k,i,l])=>`<a href="#${k}" class="btn whitespace-nowrap ${view==k?'p':'s'}"><i class="fa-solid ${i} mr-1"></i>${l}</a>`).join('');
+  const a=document.activeElement,id=a&&a.id; let html;
+  try{ html=V[view](); }catch(e){ html=`<div class="card p-6 text-sm font-bold text-red-700">Could not load this section: ${esc(e.message)}</div>`; }
+  $('#main').innerHTML=html;
+  if(keepFocus&&id){const e=document.getElementById(id);if(e){e.focus();e.setSelectionRange&&e.setSelectionRange(e.value.length,e.value.length)}}
+  if(mod) refreshModal();
+}
+function openM(html){const m=$('#modal');m.innerHTML=`<div class="bg-white rounded-3xl w-full max-w-2xl p-5 sm:p-6 my-4 fade">${html}</div>`;m.classList.remove('hidden');m.classList.add('flex')}
+function closeM(){mod=null;const m=$('#modal');m.classList.add('hidden');m.classList.remove('flex')}
+function refreshModal(){ if(!mod) return; if(mod.type==='order') openO(mod.id,true); else if(mod.type==='txn') openT(mod.id,true); else if(mod.type==='customer') openC(mod.id,true); }
+const mHead=(t,sub)=>`<div class="flex justify-between items-start gap-3 mb-3"><div><h2 class="text-base font-extrabold text-pinktheme-900">${t}</h2>${sub?`<p class="text-[11px] text-pinktheme-600 font-mono">${sub}</p>`:''}</div><button onclick="closeM()" class="w-8 h-8 rounded-full bg-pinktheme-100 hover:bg-pinktheme-200 shrink-0" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>`;
+const mRow=(k,v)=>`<div class="flex justify-between gap-3 py-1.5 border-b border-pinktheme-100 last:border-0 text-xs"><span class="text-pinktheme-600 font-semibold shrink-0">${k}</span><span class="font-bold text-pinktheme-900 text-right break-words min-w-0">${v}</span></div>`;
+const mSec=t=>`<h3 class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mt-4 mb-1">${t}</h3>`;
+function done(r,ok){ if(!r.ok) toast(r.error,'error'); else if(ok) toast(ok,'success'); render(); return r.ok; }
+
+/* ---------------- order management ---------------- */
+function openO(id,keep){
+  const o=KG.orders.get(id); if(!o){ closeM(); return toast('Order not found.','error'); } mod={type:'order',id};
+  const t=KG.txns.forOrder(id), next=o.stageIndex+1<STAGES.length?STAGES[o.stageIndex+1]:null;
+  const hist=STAGES.map((s,i)=>{const h=o.stageHistory.filter(x=>x.stage===i).slice(-1)[0],reached=!o.cancelled&&i<=o.stageIndex;return `<li class="flex justify-between gap-2 text-xs py-1 ${reached?'text-pinktheme-900 font-bold':'text-pinktheme-400'}"><span><i class="fa-solid ${reached?'fa-circle-check text-emerald-600':'fa-circle'} mr-1.5"></i>${esc(s)}</span><span>${reached&&h?fmtDateTime(h.at):'—'}</span></li>`}).join('');
+  const payActs=t?KG.PAY_TRANSITIONS[t.status].map(s=>`<button class="btn ${s==='Paid'?'p':'s'}" onclick="setPay('${esc(t.id)}','${s}')">${s==='Paid'?'Confirm simulated payment':'Mark '+s}</button>`).join(' '):'';
+  openM(`${mHead('Manage order',esc(o.id))}
+  <div class="flex flex-wrap gap-2 mb-2">${ordChip(o)}${t?payChip(t.status):''}<span class="chip bg-gray-100 text-gray-700">${o.fulfillment==='delivery'?'Home delivery':'Store pickup'}</span></div>
+  ${mSec('Customer')}${mRow('Name',esc(o.customer.name))}${mRow('Mobile',esc(o.customer.phone))}${mRow('Email',esc(o.customer.email||'—'))}${mRow(o.fulfillment==='delivery'?'Ship to':'Pickup branch',esc(o.fulfillment==='delivery'?o.customer.address:o.branch))}${mRow('Placed',fmtDateTime(o.createdAt))}
+  ${mSec('Products')}${o.items.map(i=>mRow(esc(i.name)+(i.condition?'<span class="block font-normal">'+KG.ui.conditionLabel(i.condition)+'</span>':'')+' × '+i.qty,peso(i.price*i.qty))).join('')}${mRow('Subtotal',peso(o.subtotal))}${mRow('Shipping',o.shippingFee?peso(o.shippingFee):'FREE')}${mRow('<b>Total (simulated)</b>',`<b>${peso(o.total)}</b>`)}
+  ${mSec('Payment (simulated)')}${t?mRow('Transaction',`<a class="underline font-mono" href="#transactions" onclick="openT('${esc(t.id)}')">${esc(t.id)}</a>`)+mRow('Method',esc(t.methodLabel))+mRow('Status',payChip(t.status))+(payActs?`<div class="flex flex-wrap gap-2 mt-2">${payActs}</div>`:'<p class="text-[11px] text-pinktheme-600 mt-1">This status is final.</p>'):'<p class="text-xs">No transaction record.</p>'}
+  ${mSec('Delivery progress')}<ol>${hist}</ol>
+  ${o.cancelled?`<p class="mt-2 p-3 rounded-xl bg-red-50 text-xs font-bold text-red-700">Cancelled ${fmtDateTime(o.cancelled.at)}${o.cancelled.reason?' — '+esc(o.cancelled.reason):''}</p>`:`<div class="flex flex-wrap gap-2 mt-3">
+    ${next?`<button class="btn p" onclick="adv('${esc(o.id)}')"><i class="fa-solid fa-forward-step mr-1"></i>${next==='Delivered'?'Mark as delivered':'Advance to: '+esc(next)}</button>`:'<span class="chip st-Delivered">Delivered</span>'}
+    ${o.stageIndex>0?`<button class="btn s" onclick="rev('${esc(o.id)}')"><i class="fa-solid fa-rotate-left mr-1"></i>Undo last step</button>`:''}</div>
+    ${mSec('Estimated '+(o.fulfillment==='delivery'?'delivery':'pickup')+' date')}<div class="flex gap-2"><input type="date" id="eta" class="in !w-auto" value="${esc(o.estimatedDelivery||'')}" min="${esc((o.createdAt||'').slice(0,10))}"><button class="btn s" onclick="saveEta('${esc(o.id)}')">Save date</button></div><p class="text-[10px] text-pinktheme-600/70 mt-1">Customers see this exact date. Leave blank if not yet known.</p>
+    ${o.stageIndex<STAGES.length-1?`<div class="mt-4 pt-3 border-t border-pinktheme-100"><button class="btn s text-red-600" onclick="cancelO('${esc(o.id)}')"><i class="fa-solid fa-ban mr-1"></i>Cancel order &amp; restock</button></div>`:''}`}`);
+}
+const adv=id=>{const r=KG.staff.advanceStage(id);done(r,'Order updated.')};
+const rev=id=>done(KG.staff.revertStage(id),'Last step undone.');
+const saveEta=id=>done(KG.staff.setEta(id,$('#eta').value),'Estimate saved.');
+async function cancelO(id){ if(await KG.ui.confirm('Cancel this order?','Stock will be returned to inventory and the simulated payment will be marked '+'Failed (or Refunded if it was Paid). This cannot be undone.','Cancel order',true)) done(KG.staff.cancelOrder(id,'Cancelled by staff'),'Order cancelled.'); }
+async function setPay(txnId,s){
+  if((s==='Failed'||s==='Refunded')&&!await KG.ui.confirm('Mark payment as '+s+'?','This will cancel the order and return its stock to inventory (unless it was already delivered). It cannot be undone.','Mark '+s,true)) return;
+  done(KG.staff.setPaymentStatus(txnId,s),'Payment status updated.');
+}
+/* ---------------- transaction detail ---------------- */
+function openT(id,keep){
+  const t=KG.txns.get(id); if(!t){ closeM(); return toast('Transaction not found.','error'); } mod={type:'txn',id};
+  const o=t.orderId?KG.orders.get(t.orderId):null, acts=KG.PAY_TRANSITIONS[t.status].map(s=>`<button class="btn ${s==='Paid'?'p':'s'}" onclick="setPay('${esc(t.id)}','${s}')">${s==='Paid'?'Confirm simulated payment':'Mark '+s}</button>`).join(' ');
+  openM(`${mHead('Transaction details',esc(t.id))}<div class="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] font-bold">Simulated transaction — no real payment was processed.</div>
+  ${mRow('Status',payChip(t.status))}${mRow('Amount',peso(t.amount))}${mRow('Method',esc(t.methodLabel))}${mRow('Date',fmtDateTime(t.createdAt))}${mRow('Customer',esc(o?o.customer.name:'—'))}${mRow('Order',o?`<a href="#orders" class="underline font-mono" onclick="openO('${esc(o.id)}')">${esc(o.id)}</a>`:esc(t.orderId||'—'))}
+  ${o?mSec('Products')+o.items.map(i=>mRow(esc(i.name)+' × '+i.qty,peso(i.price*i.qty))).join(''):''}
+  ${mSec('Status history')}<ol class="space-y-2">${t.history.map(h=>`<li class="text-xs flex gap-2"><span class="shrink-0 self-start">${payChip(h.status)}</span><span>${fmtDateTime(h.at)}${h.note?`<span class="block text-pinktheme-600">${esc(h.note)}</span>`:''}</span></li>`).join('')}</ol>
+  ${acts?`<div class="flex flex-wrap gap-2 mt-4">${acts}</div>`:'<p class="text-[11px] text-pinktheme-600 mt-3">This status is final.</p>'}`);
+}
+/* ---------------- customer detail ---------------- */
+function openC(id,keep){
+  const c=KG.auth.customers().find(x=>x.id===id); if(!c){ closeM(); return toast('Customer not found.','error'); } mod={type:'customer',id};
+  const os=KG.orders.forCustomer(id), spent=os.reduce((s,o)=>{const t=KG.txns.forOrder(o.id);return s+(t&&t.status==='Paid'?o.total:0)},0);
+  openM(`${mHead(esc(c.name),'Customer account')}${mRow('Email',esc(c.email))}${mRow('Mobile',esc(c.phone||'—'))}${mRow('Address',esc(c.address||'—'))}${mRow('Registered',fmtDateTime(c.createdAt))}${mRow('Orders',os.length)}${mRow('Simulated spend (Paid)',peso(spent))}
+  ${mSec('Purchase history')}${os.length?os.map(o=>{const t=KG.txns.forOrder(o.id);return `<div class="p-3 border border-pinktheme-100 rounded-xl mb-2 text-xs"><div class="flex justify-between gap-2 flex-wrap"><b class="font-mono">${esc(o.id)}</b><span>${fd(o.createdAt)}</span></div><div class="text-pinktheme-700 my-1">${esc(o.items.map(i=>i.name+' ×'+i.qty).join(', '))}</div><div class="flex justify-between items-center gap-2 flex-wrap"><b>${peso(o.total)}</b><span class="flex gap-1">${t?payChip(t.status):''}${ordChip(o)}<button class="btn s !py-0.5" onclick="openO('${esc(o.id)}')">Manage</button></span></div></div>`}).join(''):empty('No orders yet.')}`);
+}
+/* ---------------- products & inventory ---------------- */
+function inv(id,k,v){ done(KG.catalog.patch(id,{[k]:v})); }
+async function delP(id){const p=KG.catalog.get(id);if(p&&await KG.ui.confirm('Delete “'+p.name+'”?','It will be removed from the storefront. Past orders keep their own copy of the item details.','Delete',true)){done(KG.catalog.remove(id),'Product deleted.')}}
+function editP(id){const p=id?KG.catalog.get(id):{name:'',category:'smartphones',condition:CONDS[0],price:'',originalPrice:'',stock:1,status:'published',badge:'',description:'',specs:'',image:''};
+ const f=(l,i,v,t='text')=>`<div><label class="lb" for="f_${i}">${l}</label><input id="f_${i}" type="${t}" ${t==='number'?'min="0"':''} class="in" value="${esc(v)}"></div>`,sl=(l,i,o,v)=>`<div><label class="lb" for="f_${i}">${l}</label><select id="f_${i}" class="in">${o.map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('')}</select></div>`;
+ mod=null; openM(`${mHead((id?'Edit':'Add')+' product')}
+ <div class="grid sm:grid-cols-2 gap-3"><div class="sm:col-span-2">${f('Name','name',p.name)}</div>${sl('Category','category',CATS,p.category)}${sl('Condition (New / Pre-Owned grade)','condition',CONDS,p.condition)}${f('Price (₱)','price',p.price,'number')}${f('Original price (₱)','originalPrice',p.originalPrice||'','number')}${f('Stock','stock',p.stock,'number')}${sl('Listing','status',['published','draft'],p.status)}${f('Badge (optional, e.g. SALE)','badge',p.badge||'')}
+ <div><label class="lb">Photo</label><div class="flex items-center gap-2"><img id="pv" alt="" src="${esc(p.image)}" class="w-12 h-12 rounded-lg object-cover bg-pinktheme-50 border border-pinktheme-100"><input type="file" accept="image/*" onchange="photo(this)" class="text-[11px] w-full"></div><input id="f_image" type="hidden" value="${esc(p.image)}"></div>
+ <div class="sm:col-span-2"><label class="lb" for="f_description">Description</label><textarea id="f_description" rows="2" class="in">${esc(p.description)}</textarea></div><div class="sm:col-span-2"><label class="lb" for="f_specs">Specs (one per line, “Label: Value”)</label><textarea id="f_specs" rows="4" class="in">${esc(p.specs)}</textarea></div></div>
+ <div class="flex justify-end gap-2 mt-5"><button class="btn s" onclick="closeM()">Cancel</button><button class="btn p" onclick="saveP(${id||0})">Save product</button></div>`)}
+function photo(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,700/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);const u=c.toDataURL('image/jpeg',.82);$('#f_image').value=u;$('#pv').src=u};im.onerror=()=>toast('That file is not a valid image.','error');im.src=r.result};r.readAsDataURL(f)}
+function saveP(id){const g=k=>$('#f_'+k).value.trim();const r=KG.catalog.upsert({id:id||null,name:g('name'),category:g('category'),condition:g('condition'),price:g('price'),originalPrice:g('originalPrice'),stock:g('stock'),status:g('status'),badge:g('badge'),description:g('description'),specs:g('specs'),image:g('image')});
+ if(r.ok){closeM();toast('Product saved.','success');render()}else toast(r.error,'error')}
+/* ---------------- inquiries ---------------- */
+function saveQ(Q){ if(!KG.inquiries.save(Q)) toast('Could not save (storage full).','error'); }
+function setQ(id,s){const Q=KG.inquiries.all();Q.find(q=>q.id==id).status=s;saveQ(Q);render()}
+function reply(id){const t=$('#rt').value.trim();if(!t)return toast('Write a reply first','error');const Q=KG.inquiries.all(),q=Q.find(x=>x.id==id);(q.replies=q.replies||[]).push({at:new Date().toISOString(),text:t});q.status='replied';saveQ(Q);render();
+ location.href='mailto:'+q.email+'?subject='+encodeURIComponent('Re: '+q.concern)+'&body='+encodeURIComponent(t);toast('Reply saved','success')}
+/* ---------------- admin password ---------------- */
+function pwModal(){mod=null;openM(`${mHead('Change administrator password')}<form onsubmit="savePw(event)" class="space-y-3"><div><label class="lb" for="pwo">Current password</label><input id="pwo" type="password" class="in" required autocomplete="current-password"></div><div><label class="lb" for="pwn">New password (min. 6 characters)</label><input id="pwn" type="password" class="in" minlength="6" required autocomplete="new-password"></div><div class="flex justify-end gap-2"><button type="button" class="btn s" onclick="closeM()">Cancel</button><button class="btn p" type="submit">Update password</button></div></form>`)}
+function savePw(e){e.preventDefault();const b=e.target.querySelector('button[type=submit]');b.disabled=true;setTimeout(()=>{const r=KG.auth.changePassword($('#pwo').value,$('#pwn').value);b.disabled=false;if(r.ok){closeM();toast('Password updated.','success')}else toast(r.error,'error')},30)}
+
+/* ---------------- wiring ---------------- */
+addEventListener('hashchange',()=>{view=location.hash.slice(1)||'overview';sel=null;render()});
+addEventListener('kg:change',()=>{ if(!KG.auth.isAdmin()){ location.replace('index.html'); return; }   // admin signed out in another tab
+  if(!document.activeElement.matches('input,textarea,select')||mod) render(); });
+$('#modal').addEventListener('click',e=>{if(e.target.id=='modal')closeM()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+if(KG.guard('admin')) render();
+</script>
+</body>
+</html>

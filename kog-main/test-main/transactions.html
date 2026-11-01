@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transactions | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+<script>KG.guard('customer');</script>
+<style>
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}
+.in{width:100%;padding:.6rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none;color:#3D1223}
+.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}
+.btn{padding:.6rem 1rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:#7B314E;color:#fff}.btn-p:hover:not(:disabled){background:#592037}
+.btn-s{background:#fff;border:1px solid #F8DDE5;color:#592037}.btn-s:hover:not(:disabled){background:#FCEEF2}
+.chip{font-size:10px;font-weight:800;padding:.15rem .6rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}
+.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}
+.td{padding:.65rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.skeleton{background:linear-gradient(90deg,#FCEEF2 25%,#F8DDE5 50%,#FCEEF2 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:1rem}@keyframes sk{to{background-position:-200% 0}}
+img{max-width:100%}
+
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+<div class="flex items-center gap-3 mb-6">
+  <a href="index.html"><img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 rounded-xl"></a>
+  <div><h1 class="text-xl sm:text-2xl font-extrabold text-pinktheme-900 leading-tight">My Transactions</h1><p class="text-xs text-pinktheme-600">Payment records for your orders (simulated)</p></div>
+</div>
+
+<div class="kg-sim mb-4"><i class="fa-solid fa-flask mr-1"></i><b>Simulated transactions.</b> Every payment shown here is a demonstration record &mdash; no real money has been charged or received.</div>
+<div class="flex flex-wrap gap-2 mb-4">
+  <input id="q" class="in !w-auto flex-1 min-w-[180px]" placeholder="Search by transaction or order ID&hellip;" oninput="draw()" aria-label="Search">
+  <select id="fs" class="in !w-auto" onchange="draw()" aria-label="Filter by status"><option value="">All statuses</option></select>
+</div>
+<div class="card overflow-x-auto"><table class="w-full min-w-[640px]"><thead><tr><th class="th">Transaction</th><th class="th">Date</th><th class="th">Order</th><th class="th">Method</th><th class="th">Amount</th><th class="th">Status</th><th class="th"></th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 overflow-y-auto" style="background:rgba(89,32,55,.45);backdrop-filter:blur(4px)" onclick="if(event.target===this)closeM()" role="dialog" aria-modal="true"><div id="mbox" class="bg-white rounded-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto p-6 fade"></div></div>
+</main>
+<footer class="text-center text-[11px] text-pinktheme-700/70 py-6 border-t border-pinktheme-200">&copy; 2026 Kate's Original Gadgets &middot; Demo project: all payments are simulated and no real money is charged.</footer>
+<script>
+
+const {esc,peso,fmtDateTime}=KG.util;
+document.getElementById('fs').innerHTML+=KG.PAY_STATUSES.map(s=>`<option>${s}</option>`).join('');
+function draw(){
+  const q=document.getElementById('q').value.trim().toLowerCase(), fs=document.getElementById('fs').value;
+  const list=KG.txns.mine().filter(t=>(!fs||t.status===fs)&&(!q||t.id.toLowerCase().includes(q)||String(t.orderId).toLowerCase().includes(q)));
+  document.getElementById('rows').innerHTML=list.map(t=>`<tr class="hover:bg-pinktheme-50">
+    <td class="td font-mono font-bold">${esc(t.id)}</td><td class="td">${esc(fmtDateTime(t.createdAt))}</td><td class="td font-mono">${esc(t.orderId)}</td>
+    <td class="td">${esc(t.methodLabel)}</td><td class="td font-bold">${peso(t.amount)}</td><td class="td"><span class="chip st-${esc(t.status)}">${esc(t.status)}</span></td>
+    <td class="td text-right"><button class="btn btn-s !py-1" onclick="openT('${esc(t.id)}')">Details</button></td></tr>`).join('')||
+    `<tr><td colspan="7" class="td text-center py-10 text-pinktheme-600">${KG.txns.mine().length?'No transactions match your filters.':'You have no transactions yet. They appear here after you place an order.'}</td></tr>`;
+}
+function openT(id){
+  const t=KG.txns.get(id); if(!t) return KG.ui.toast('Transaction not found.','error');
+  const o=KG.orders.get(t.orderId);
+  const row=(k,v)=>`<div class="flex justify-between gap-3 py-1.5 border-b border-pinktheme-100 last:border-0 text-xs"><span class="text-pinktheme-600 font-semibold">${k}</span><span class="font-bold text-pinktheme-900 text-right">${v}</span></div>`;
+  document.getElementById('mbox').innerHTML=`<div class="flex justify-between items-start mb-3"><div><h2 class="text-base font-extrabold text-pinktheme-900">Transaction details</h2><p class="font-mono text-[11px] text-pinktheme-600">${esc(t.id)}</p></div><button onclick="closeM()" class="w-8 h-8 rounded-full bg-pinktheme-100 hover:bg-pinktheme-200" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="kg-sim mb-3"><i class="fa-solid fa-flask mr-1"></i>Simulated transaction &mdash; no real payment was processed.</div>
+  ${row('Status',`<span class="chip st-${esc(t.status)}">${esc(t.status)}</span>`)}${row('Order ID',`<a class="underline font-mono" href="tracking.html#${esc(t.orderId)}">${esc(t.orderId)}</a>`)}${row('Date',esc(fmtDateTime(t.createdAt)))}${row('Payment method',esc(t.methodLabel))}
+  ${o?row('Fulfillment',o.fulfillment==='delivery'?'Home Delivery':'Pickup: '+esc(o.branch)):''}
+  ${o?`<h3 class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mt-4 mb-1">Purchased products</h3>${o.items.map(i=>row(esc(i.name)+(i.condition?'<span class="block font-normal">'+KG.ui.conditionLabel(i.condition)+'</span>':'')+' &times; '+i.qty,peso(i.price*i.qty))).join('')}${row('Subtotal',peso(o.subtotal))}${row('Shipping',o.shippingFee?peso(o.shippingFee):'FREE')}`:''}
+  ${row('<b>Total amount</b>',`<b class="text-sm">${peso(t.amount)}</b>`)}
+  <h3 class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mt-4 mb-1">Payment status history</h3>
+  <ol class="space-y-2">${t.history.map(h=>`<li class="text-xs flex gap-2"><span class="chip st-${esc(h.status)} shrink-0 self-start">${esc(h.status)}</span><span><span class="text-pinktheme-700">${esc(fmtDateTime(h.at))}</span>${h.note?`<span class="block text-pinktheme-600">${esc(h.note)}</span>`:''}</span></li>`).join('')}</ol>`;
+  const m=document.getElementById('modal'); m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeM(){const m=document.getElementById('modal'); m.classList.add('hidden'); m.classList.remove('flex');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+window.addEventListener('kg:change',()=>{ if(KG.auth.currentUser()) draw(); });
+if(KG.guard('customer')) draw();
+
+</script>
+</body>
+</html>

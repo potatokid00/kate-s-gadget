@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support - Kate's Original Gadgets</title>
+    
+    <!-- Exact Font Import: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        pinktheme: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#881337',
+                            900: '#581c2d', /* Deep Burgundy matching brand headers/buttons */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+</head>
+<body class="font-sans min-h-screen flex flex-col selection:bg-pinktheme-200 selection:text-pinktheme-900 bg-[#FFF5F8]">
+
+    <!-- HEADER / NAVIGATION (MATCHING INDEX.HTML EXACTLY) -->
+    <header class="sticky top-0 z-50 bg-[#FFF5F8]/90 backdrop-blur-md border-b border-pinktheme-200/80 shadow-sm transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Top Header Row -->
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand Logo -->
+                <a href="index.html" class="flex items-center gap-3 shrink-0">
+                    <div class="w-11 h-11 rounded-xl bg-pinktheme-900 text-white flex items-center justify-center font-extrabold text-xl shadow-md">
+                        <i class="fa-solid fa-mobile-screen-button text-pinktheme-200"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="block text-sm font-black text-pinktheme-900 leading-tight uppercase tracking-wider">Kate's</span>
+                        <span class="block text-[10px] font-bold text-pinktheme-700 uppercase tracking-widest">Original Gadgets</span>
+                    </div>
+                </a>
+
+                <!-- Store Selector Dropdown Button -->
+                <button onclick="window.location.href='index.html'" class="hidden md:flex items-center gap-2 px-3.5 py-1.5 bg-white border border-pinktheme-200 rounded-full text-[11px] font-bold text-pinktheme-900 shadow-sm hover:border-pinktheme-400 transition">
+                    <i class="fa-solid fa-location-dot text-pinktheme-600 text-xs"></i>
+                    <div class="text-left">
+                        <span class="block text-[9px] uppercase font-bold text-pinktheme-400 leading-none">Fulfillment Store</span>
+                        <span class="text-xs font-bold text-pinktheme-900">Abreeza Mall Branch</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-pinktheme-400 ml-1"></i>
+                </button>
+
+                <!-- Search Input Bar -->
+                <div class="flex-1 max-w-md mx-2 sm:mx-4">
+                    <form action="index.html" method="GET" class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-pinktheme-400 text-xs"></i>
+                        <input type="text" name="search" placeholder="Search iPhone, Samsung, AirPods..." class="w-full pl-10 pr-4 py-2 bg-white border border-pinktheme-200 rounded-full text-xs text-pinktheme-900 placeholder-pinktheme-400 focus:outline-none focus:border-pinktheme-500 shadow-sm transition" />
+                    </form>
+                </div>
+
+                <!-- Right Action Icons (Wishlist, Cart, User) -->
+                <div class="flex items-center gap-4 text-pinktheme-900">
+                    <a href="index.html" data-customer-only class="p-2 hover:text-pinktheme-600 transition" title="Wishlist">
+                        <i class="fa-regular fa-heart text-lg"></i>
+                    </a>
+
+                    <!-- Cart Icon with Badge -->
+                    <a href="cart-dashboard.html" data-customer-only class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-pinktheme-100/50 transition" title="Shopping Cart">
+                        <div class="relative">
+                            <i class="fa-solid fa-bag-shopping text-lg text-pinktheme-900"></i>
+                            <span class="absolute -top-1.5 -right-2 bg-pinktheme-800 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center" data-kg-cart-count>0</span>
+                        </div>
+                        <span class="text-xs font-extrabold text-pinktheme-900 hidden sm:inline" data-kg-cart-total>₱0.00</span>
+                    </a>
+
+                    <a href="index.html?login=1" data-kg-account-link class="p-2 hover:text-pinktheme-600 transition" title="Account">
+                        <i class="fa-regular fa-user text-lg"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Category Navigation Row -->
+            <!-- Category Navigation Row -->
+<nav class="hidden lg:flex items-center justify-between border-t border-pinktheme-200/60 py-2.5 text-xs font-bold text-pinktheme-800">
+    <a href="index.html" class="hover:text-pinktheme-600 transition">Shop All</a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPhone <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPad <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Laptops & PCs</a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Watch <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-60"></i></a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">iPhone Pre-Owned</a>
+    <a href="index.html#catalog" class="hover:text-pinktheme-600 transition">Accessories & Chargers</a>
+    
+    <a href="support.html" class="text-pinktheme-900 font-extrabold border-b-2 border-pinktheme-800 pb-0.5">Support</a>
+    <a href="about.html" class="hover:text-pinktheme-600 transition">About Us</a>
+
+</nav>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT: EXACT FORM DESIGN, FONTS & COLORS -->
+    <main class="flex-grow py-14 bg-[#FFF5F8]">
+        <div class="max-w-xl mx-auto px-4 sm:px-6">
+            
+            <div class="mb-8 text-center sm:text-left">
+                <h1 class="text-2xl sm:text-3xl font-black text-pinktheme-900 tracking-tight mb-2">
+                    Customer Support Form
+                </h1>
+                <p class="text-xs sm:text-sm text-pinktheme-800/80 font-medium">
+                    Please fill out the form correctly and clearly for us to assist you.
+                </p>
+            </div>
+
+            <!-- Support Form Box -->
+            <form onsubmit="handleSupportSubmit(event)" class="space-y-5 bg-white p-6 sm:p-8 rounded-2xl border border-pinktheme-200/80 shadow-sm">
+                
+                <!-- First Name & Last Name Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">First Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="suppFirstName" required placeholder="Enter first name" class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 placeholder-pinktheme-300 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition" />
+                        <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">Last Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="suppLastName" required placeholder="Enter last name" class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 placeholder-pinktheme-300 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition" />
+                        <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">Email <span class="text-red-500">*</span></label>
+                    <input type="email" id="suppEmail" required placeholder="e.g. user@example.com" class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 placeholder-pinktheme-300 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition" />
+                    <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                </div>
+
+                <!-- Contact Number -->
+                <div>
+                    <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">Contact Number <span class="text-red-500">*</span></label>
+                    <input type="tel" id="suppPhone" required placeholder="e.g. 0955 884 4392" class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 placeholder-pinktheme-300 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition" />
+                    <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                </div>
+
+                <!-- Concern Dropdown -->
+                <div>
+                    <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">Concern <span class="text-red-500">*</span></label>
+                    <select id="suppConcern" required class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition">
+                        <option value="" disabled selected class="text-pinktheme-300">Please select</option>
+                        <option value="Order Status & Delivery">Order Status & Delivery</option>
+                        <option value="Device Warranty & Service">Device Warranty & Service</option>
+                        <option value="Store Pickup Inquiry">Store Pickup Inquiry</option>
+                        <option value="Stock & Availability">Stock & Availability</option>
+                        <option value="Other Concerns">Other Concerns</option>
+                    </select>
+                    <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                </div>
+
+                <!-- Details / Remarks -->
+                <div>
+                    <label class="block text-xs font-bold text-pinktheme-900 mb-1.5">Details / Remarks <span class="text-red-500">*</span></label>
+                    <textarea id="suppMessage" required rows="4" placeholder="Describe your inquiry or concern..." class="w-full px-4 py-3 bg-[#FFF9FB] border border-pinktheme-200 rounded-xl text-xs text-pinktheme-900 placeholder-pinktheme-300 focus:outline-none focus:border-pinktheme-600 focus:bg-white transition resize-none"></textarea>
+                    <span class="text-[10px] text-red-500 font-semibold mt-1 block">Required</span>
+                </div>
+
+                <!-- Submit Button (Matches exact dark burgundy theme) -->
+                <button type="submit" class="w-full py-3.5 bg-pinktheme-900 hover:bg-[#441322] text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-[11px]"></i> Submit Inquiry
+                </button>
+            </form>
+
+        </div>
+    </main>
+
+    <!-- FOOTER (MATCHING INDEX.HTML FOOTER) -->
+    <footer class="bg-[#FFF5F8] border-t border-pinktheme-200/80 text-pinktheme-800 text-xs py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                
+                <!-- Col 1: Store Intro -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-pinktheme-900 font-extrabold text-base">
+                        <i class="fa-solid fa-mobile-screen-button text-pinktheme-600"></i> Kate's Original Gadgets
+                    </div>
+                    <p class="text-xs text-pinktheme-800/80 leading-relaxed font-medium">
+                        Your trusted gadget store, now with full store pickup and delivery nationwide! Authentic smartphones, audio gear, and tech accessories with store warranty.
+                    </p>
+                </div>
+
+                <!-- Col 2: Locations -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">Store Locations</h4>
+                    <ul class="space-y-2 text-pinktheme-800/90 font-medium">
+                        <li>Greenhills Promenade Flagship</li>
+                        <li>SM Megamall Cyberzone</li>
+                        <li>SM Mall of Asia Branch</li>
+                        <li>SM Lanang Premier Davao</li>
+                        <li>Abreeza Mall Davao Branch</li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Accepted Payments -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">Accepted Payments</h4>
+                    <div class="flex flex-wrap gap-2 text-pinktheme-900 font-bold text-xs">
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Cash on Delivery (COD)</span>
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">GCash / PayMaya</span>
+                        <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Bank Transfer</span>
+                    </div>
+                </div>
+
+                <!-- Col 4: Support Contact -->
+                <div>
+                    <h4 class="font-extrabold text-pinktheme-900 uppercase text-[11px] mb-3">CUSTOMER SUPPORT</h4>
+                    
+                    <a href="tel:09558844392" class="flex items-center gap-2 text-xs font-bold text-pinktheme-900 hover:text-pinktheme-700 transition mb-3 group">
+                        <div class="w-6 h-6 rounded-lg bg-white border border-pinktheme-200 flex items-center justify-center text-pinktheme-700 group-hover:bg-pinktheme-900 group-hover:text-white transition">
+                            <i class="fa-solid fa-phone text-[10px]"></i>
+                        </div>
+                        <span>0955 884 4392</span>
+                    </a>
+
+                    <a href="https://m.me/katesoriginalgadgets" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-pinktheme-900 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-[#441322] transition">
+                        <i class="fa-brands fa-facebook-messenger"></i> Message Kate's Gadgets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-pinktheme-200/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-pinktheme-800/70 text-[11px] font-medium">
+                <p>&copy; 2026 Kate's Original Gadgets. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Form Submit Handler -->
+    <script>
+        function handleSupportSubmit(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('suppFirstName').value;
+            const concern = document.getElementById('suppConcern').value;
+            let saved = false;
+            try {
+                let list = [];
+                try { const raw = JSON.parse(localStorage.getItem('kate_inquiries')); if (Array.isArray(raw)) list = raw; } catch (e) {}
+                list.unshift({
+                    id: 'Q' + Date.now(), createdAt: new Date().toISOString(),
+                    name: (firstName + ' ' + document.getElementById('suppLastName').value).trim(),
+                    email: document.getElementById('suppEmail').value, phone: document.getElementById('suppPhone').value,
+                    concern, message: document.getElementById('suppMessage').value,
+                    type: /Stock|Pickup/.test(concern) ? 'purchase' : 'message', status: 'new', replies: []
+                });
+                localStorage.setItem('kate_inquiries', JSON.stringify(list));
+                saved = true;
+            } catch (e) {}
+
+            if (!saved) {
+                alert('Sorry, your ticket could not be saved because browser storage is full or blocked. Please try again or message us on Facebook.');
+                return;
+            }
+            alert(`Thank you, ${firstName}! Your ticket regarding "${concern}" has been saved. Kate's team will see it in the Staff Dashboard inbox.`);
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>

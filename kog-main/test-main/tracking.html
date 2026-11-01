@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Tracking | Kate's Original Gadgets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{pinktheme:{50:'#FFF5F8',100:'#FCEEF2',200:'#F8DDE5',300:'#F3C0D0',400:'#E297AF',500:'#C86D8B',600:'#9E4665',700:'#7B314E',800:'#592037',900:'#3D1223'}},fontFamily:{sans:['Plus Jakarta Sans','Inter','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="kg.js"></script>
+<script>KG.guard('customer');</script>
+<style>
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#FFF5F8;color:#592037;overflow-x:hidden}
+.card{background:#fff;border:1px solid #F8DDE5;border-radius:1.25rem}
+.in{width:100%;padding:.6rem .75rem;background:#FFF9FB;border:1px solid #F8DDE5;border-radius:.75rem;font-size:12px;outline:none;color:#3D1223}
+.in:focus{border-color:#9E4665;background:#fff}
+.lb{display:block;font-size:11px;font-weight:700;margin-bottom:.25rem}
+.btn{padding:.6rem 1rem;border-radius:.75rem;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:#7B314E;color:#fff}.btn-p:hover:not(:disabled){background:#592037}
+.btn-s{background:#fff;border:1px solid #F8DDE5;color:#592037}.btn-s:hover:not(:disabled){background:#FCEEF2}
+.chip{font-size:10px;font-weight:800;padding:.15rem .6rem;border-radius:99px;white-space:nowrap;display:inline-block}
+.st-Pending{background:#FEF3C7;color:#92400E}.st-Processing{background:#E0F2FE;color:#075985}.st-Paid{background:#D1FAE5;color:#065F46}
+.st-Failed{background:#FEE2E2;color:#991B1B}.st-Refunded{background:#EDE9FE;color:#5B21B6}.st-Cancelled{background:#FEE2E2;color:#991B1B}.st-Delivered{background:#D1FAE5;color:#065F46}.st-stage{background:#FCEEF2;color:#7B314E}
+.th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9E4665;text-align:left;padding:.6rem .75rem;white-space:nowrap}
+.td{padding:.65rem .75rem;font-size:12px;border-top:1px solid #FCEEF2;vertical-align:middle}
+.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.skeleton{background:linear-gradient(90deg,#FCEEF2 25%,#F8DDE5 50%,#FCEEF2 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:1rem}@keyframes sk{to{background-position:-200% 0}}
+img{max-width:100%}
+.step{position:relative}
+.dot{width:30px;height:30px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #F3C0D0;background:#fff;color:#C86D8B;flex-shrink:0}
+.dot.done{background:#7B314E;border-color:#7B314E;color:#fff}.dot.cur{background:#fff;border-color:#7B314E;color:#7B314E;box-shadow:0 0 0 4px #F8DDE5}
+.dot.x{background:#fee2e2;border-color:#ef4444;color:#b91c1c}
+@media(min-width:768px){.steps{display:grid;grid-template-columns:repeat(6,1fr)}.step{display:block;text-align:center;padding:0 4px}.step .dot{margin:0 auto}
+.step:not(:last-child)::after{content:"";position:absolute;top:14px;left:calc(50% + 18px);right:calc(-50% + 18px);height:2px;background:#F3C0D0}.step.done:not(:last-child)::after{background:#7B314E}}
+@media(max-width:767px){.step{display:flex;gap:12px;padding-bottom:14px}.step:not(:last-child)::after{content:"";position:absolute;left:14px;top:32px;bottom:0;width:2px;background:#F3C0D0}.step.done:not(:last-child)::after{background:#7B314E}}
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+<div class="flex items-center gap-3 mb-6">
+  <a href="index.html"><img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 rounded-xl"></a>
+  <div><h1 class="text-xl sm:text-2xl font-extrabold text-pinktheme-900 leading-tight">Order Tracking</h1><p class="text-xs text-pinktheme-600">Follow your orders from placement to delivery</p></div>
+</div>
+
+<div id="list" class="space-y-5"></div>
+</main>
+<footer class="text-center text-[11px] text-pinktheme-700/70 py-6 border-t border-pinktheme-200">&copy; 2026 Kate's Original Gadgets &middot; Demo project: all payments are simulated and no real money is charged.</footer>
+<script>
+
+const {esc,peso,fmtDateTime,fmtDate}=KG.util;
+const ICONS=['fa-receipt','fa-circle-check','fa-box-open','fa-truck-fast','fa-route','fa-house-circle-check'];
+function stepper(o){
+  return `<div class="steps mt-5">${KG.STAGES.map((s,i)=>{
+    const h=o.stageHistory.filter(x=>x.stage===i).slice(-1)[0];
+    const done=!o.cancelled&&i<o.stageIndex, cur=!o.cancelled&&i===o.stageIndex&&i<KG.STAGES.length-1, fin=!o.cancelled&&i===o.stageIndex&&i===KG.STAGES.length-1;
+    const cls=o.cancelled?(i===0?'done':''):(done||fin?'done':cur?'cur':'');
+    return `<div class="step ${cls}"><span class="dot ${cls==='done'?'done':cls==='cur'?'cur':''}"><i class="fa-solid ${(done||fin||(o.cancelled&&i===0))?'fa-check':ICONS[i]}"></i></span>
+      <div class="md:mt-2"><p class="text-[11px] font-extrabold ${cls?'text-pinktheme-900':'text-pinktheme-400'}">${esc(s)}</p>
+      <p class="text-[10px] text-pinktheme-600">${h&&i<=o.stageIndex?esc(fmtDateTime(h.at)):(i<=o.stageIndex&&!o.cancelled?'No timestamp recorded':'Pending')}</p></div></div>`;}).join('')}</div>`;
+}
+function draw(){
+  const orders=KG.orders.mine(), el=document.getElementById('list');
+  if(!orders.length){ el.innerHTML=`<div class="card p-10 text-center"><i class="fa-solid fa-truck-fast text-4xl text-pinktheme-300 mb-3"></i><p class="text-sm font-extrabold text-pinktheme-900">No orders yet</p><p class="text-xs text-pinktheme-600 mt-1 mb-4">Once you place an order you can follow it here.</p><a href="index.html#catalog" class="btn btn-p">Start shopping</a></div>`; return; }
+  el.innerHTML=orders.map(o=>{
+    const t=KG.txns.forOrder(o.id), ps=t?t.status:'Pending', st=KG.orderStatus(o);
+    return `<article id="${esc(o.id)}" class="card p-5 fade">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div><h2 class="font-mono text-sm font-extrabold text-pinktheme-900">Order ${esc(o.id)}</h2><p class="text-[11px] text-pinktheme-600">Placed ${esc(fmtDateTime(o.createdAt))}</p></div>
+        <div class="flex flex-wrap gap-2"><span class="chip st-${esc(ps)}">Payment: ${esc(ps)}</span><span class="chip ${o.cancelled?'st-Cancelled':st==='Delivered'?'st-Delivered':'st-stage'}">Delivery: ${esc(st)}</span></div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 mt-4 text-xs">
+        <div class="md:col-span-2"><p class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mb-2">Purchased products</p>
+          <div class="space-y-2">${o.items.map(i=>`<div class="flex items-center gap-3"><img src="${esc(i.image)}" alt="" class="w-10 h-10 rounded-lg object-cover bg-pinktheme-50 border border-pinktheme-100"><span class="flex-1 min-w-0 font-bold text-pinktheme-900">${esc(i.name)}${i.condition?'<span class="block font-normal">'+KG.ui.conditionLabel(i.condition)+'</span>':''}<span class="block font-normal text-pinktheme-600">Qty ${i.qty} &times; ${peso(i.price)}</span></span><b>${peso(i.price*i.qty)}</b></div>`).join('')}</div></div>
+        <div class="space-y-1.5 bg-pinktheme-50 rounded-2xl p-3 self-start">
+          <div class="flex justify-between"><span class="text-pinktheme-600">Total</span><b>${peso(o.total)}</b></div>
+          <div class="flex justify-between"><span class="text-pinktheme-600">Method</span><span class="font-bold text-right">${esc(o.payment.label)}</span></div>
+          <div class="flex justify-between"><span class="text-pinktheme-600">${o.fulfillment==='delivery'?'Delivery':'Pickup'}</span><span class="font-bold text-right">${o.fulfillment==='delivery'?'Home Delivery':esc(o.branch)}</span></div>
+          <div class="flex justify-between"><span class="text-pinktheme-600">Estimated ${o.fulfillment==='delivery'?'arrival':'pickup'}</span><span class="font-bold text-right">${o.estimatedDelivery?esc(fmtDate(o.estimatedDelivery)):'To be confirmed by Kate&rsquo;s team'}</span></div>
+        </div>
+      </div>
+      ${o.cancelled?`<div class="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-700"><i class="fa-solid fa-ban mr-1"></i>This order was cancelled on ${esc(fmtDateTime(o.cancelled.at))}.${o.cancelled.reason?' Reason: '+esc(o.cancelled.reason):''}</div>`:''}
+      ${stepper(o)}
+      <p class="text-[10px] text-pinktheme-500 mt-3">Payment shown is simulated. Delivery updates are entered by Kate&rsquo;s staff.</p>
+    </article>`;}).join('');
+  const id=decodeURIComponent(location.hash.slice(1)); if(id){ const t=document.getElementById(id); if(t){ t.style.boxShadow='0 0 0 3px #E297AF'; t.scrollIntoView({block:'center'}); } }
+}
+window.addEventListener('kg:change',()=>{ if(KG.auth.currentUser()) draw(); });
+if(KG.guard('customer')) draw();
+
+</script>
+</body>
+</html>
