@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kate's Original Gadgets | Premium Light Pink Tech Store</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinktheme: {
+                            50: '#FFF5F9',   // Ultra soft light pink background
+                            100: '#FFE4F2',  // Light pink primary tint
+                            200: '#FCCCE5',  // Soft blush accent & borders
+                            300: '#FA9ECC',  // Soft pink pill / badges
+                            400: '#F77FBE',  // Persian Pink (Primary Brand Color)
+                            500: '#E56CAB',  // Medium Persian Pink accent
+                            600: '#C74D8E',  // Deep Persian Pink
+                            700: '#9E336D',  // Rich plum pink (headings/buttons)
+                            800: '#70204C',  // Dark rose text
+                            900: '#450F2E'   // Deepest text tone
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            color: #F77FBE;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF5F8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F3C0D0;
+            border-radius: 4px;
+        }
+        .modal-backdrop {
+            background-color: rgba(89, 32, 55, 0.4);
+            backdrop-filter: blur(6px);
+        }
+        /* Hero banner transitions */
+@keyframes heroEnterRight {
+    from {
+        opacity: 0;
+        transform: translateX(35px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes heroEnterLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-35px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.hero-slide-enter-right {
+    animation: heroEnterRight 600ms ease-out both;
+}
+
+.hero-slide-enter-left {
+    animation: heroEnterLeft 600ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide-enter-right,
+    .hero-slide-enter-left {
+        animation: none;
+    }
+}
+    </style>
+<script src="kg.js"></script>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pinktheme-200 selection:text-pinktheme-800">
+
+    
+    <header class="sticky top-0 z-30 bg-[#FFF5F8]/90 backdrop-blur-md border-b border-pinktheme-200 shadow-sm transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-3 sm:gap-4">
+                
+                
+                <!-- BRAND LOGO -->
+            <a href="#" class="flex items-center shrink-0">
+                <img src="kate.jpg" alt="Kate's Original Gadgets" class="h-12 sm:h-16 w-auto rounded-xl object-contain hover:opacity-90 transition" />
+            </a>
+
+                <!-- POWER MAC STYLE "SELECT STORE" PILL BUTTON (HEADER) -->
+                <button onclick="openStoreModal()" class="flex items-center gap-2 px-3 py-2 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold hover:bg-pinktheme-100 hover:border-pinktheme-300 transition shadow-sm shrink-0">
+                    <div class="w-6 h-6 rounded-full bg-pinktheme-100 text-pinktheme-700 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="text-left hidden lg:block">
+                        <span class="block text-[9px] font-extrabold uppercase tracking-wider text-pinktheme-600/80 leading-none">Fulfillment Store</span>
+                        <span id="selectedStoreHeaderLabel" class="text-xs font-black text-pinktheme-800 truncate max-w-[140px]">Greenhills Flagship</span>
+                    </div>
+                    <span id="selectedStoreHeaderLabelMobile" class="lg:hidden text-xs font-black text-pinktheme-800 truncate max-w-[90px] sm:max-w-[130px]">Greenhills</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-pinktheme-500 ml-0.5"></i>
+                </button>
+
+                <!-- SEARCH BAR (DESKTOP) -->
+                <div class="hidden md:flex flex-1 max-w-sm mx-2">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search iPhone, Samsung, AirPods..." 
+                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-pinktheme-200 rounded-full text-xs text-pinktheme-800 placeholder-pinktheme-600/50 focus:outline-none focus:bg-white focus:border-pinktheme-400 focus:ring-2 focus:ring-pinktheme-200 transition-all shadow-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-pinktheme-500 text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- NAVIGATION ACTIONS -->
+                <div class="flex items-center gap-1.5 sm:gap-3">
+
+                    <!-- Wishlist Button -->
+                    <button data-customer-only onclick="toggleWishlistModal()" class="relative p-2.5 text-pinktheme-700 hover:bg-pinktheme-200/60 rounded-full transition" title="Wishlist">
+                        <i class="fa-regular fa-heart text-lg"></i>
+                        <span id="wishlistBadge" class="hidden absolute top-1 right-1 w-4 h-4 bg-pinktheme-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Shopping Cart Trigger -->
+                    <button data-customer-only onclick="toggleCartDrawer()" class="relative p-2.5 text-pinktheme-700 hover:bg-pinktheme-200/60 rounded-full transition flex items-center gap-2" title="Shopping Cart">
+                        <div class="relative">
+                            <i class="fa-solid fa-bag-shopping text-lg text-pinktheme-700"></i>
+                            <span id="cartBadge" class="absolute -top-1.5 -right-2 w-5 h-5 bg-pinktheme-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span>
+                        </div>
+                        
+                    </button>
+
+                    <div class="h-6 w-px bg-pinktheme-200 mx-0.5 sm:mx-1"></div>
+
+                    <!-- USER SIGN IN / PROFILE ICON BUTTON -->
+                    <div id="authHeaderContainer">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- MOBILE SCROLLABLE CATEGORY NAVIGATION -->
+<div class="lg:hidden flex items-center gap-2 overflow-x-auto py-2 px-4 no-scrollbar border-b border-pinktheme-200/60 bg-pinktheme-50/50">
+    <button onclick="filterCategory('all')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-pinktheme-700 text-white text-xs font-bold shadow-sm shrink-0">Shop All</button>
+    <button onclick="filterCategory('smartphones')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold shrink-0">iPhone</button>
+    <button onclick="filterCategory('tablets')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold shrink-0">iPad</button>
+    <button onclick="filterCategory('smartwatches')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold shrink-0">Watch</button>
+    <button onclick="filterCategory('audio')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold shrink-0">AirPods</button>
+    <button onclick="filterCategory('accessories')" class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white border border-pinktheme-200 text-pinktheme-800 text-xs font-bold shrink-0">Accessories</button>
+</div>
+
+            <!-- CATEGORY NAV MENU -->
+            <!-- CATEGORY NAV MENU WITH DROPDOWN -->
+<!-- CATEGORY NAV MENU WITH DROPDOWNS -->
+<!-- CATEGORY NAV MENU WITH DROPDOWNS -->
+<nav class="hidden lg:flex items-center justify-between border-t border-pinktheme-200/80 py-2.5 text-xs font-bold text-pinktheme-700 relative">
+    <a href="index.html" onclick="filterCategory('all')" class="hover:text-pinktheme-500 transition py-1">Shop All</a>
+   
+
+    <!-- iPhone Category Dropdown -->
+    <div class="relative group py-1">
+        <a href="#catalog" onclick="filterCategory('smartphones')" class="hover:text-pinktheme-500 transition flex items-center gap-1.5 cursor-pointer py-1">
+            iPhone
+            <i class="fa-solid fa-chevron-down text-[9px] text-pinktheme-400 group-hover:rotate-180 transition-transform duration-200"></i>
+        </a>
+
+        <div class="absolute left-0 top-full mt-1 w-52 bg-white border border-pinktheme-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50 transition-all">
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-2 text-xs font-extrabold text-pinktheme-900 hover:bg-pinktheme-100/60 transition">View all iPhone</a>
+            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 18 Pro</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone Duo</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 17 Pro</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 17</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 17e</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone Air</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 16</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 15</a>
+            <a href="#catalog" onclick="filterCategory('smartphones')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPhone 14</a>
+            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
+            <a href="#catalog" onclick="filterCategory('accessories')" class="block px-4 py-2 text-xs font-semibold text-pinktheme-700 hover:bg-pinktheme-100/60 transition">iPhone Accessories</a>
+        </div>
+    </div>
+
+    <!-- iPad Category Dropdown -->
+    
+
+    
+
+    <!-- Watch Category Dropdown -->
+    
+    <a href="#catalog" onclick="filterCategory('audio')" class="hover:text-pinktheme-500 transition py-1">iPhone Pre-Owned</a>
+    
+    <!-- Change this -->
+<a href="support.html" class="hover:text-pinktheme-500 transition py-1">Support</a>
+<a href="about.html" class="hover:text-pinktheme-600 transition">About Us</a>
+    
+    
+</nav>
+            <!-- MOBILE SEARCH BAR -->
+            <div class="pb-3 md:hidden">
+                <div class="relative w-full">
+                    <input type="text" oninput="handleSearch(this.value)" placeholder="Search gadgets..." 
+                        class="w-full pl-9 pr-4 py-2 bg-white border border-pinktheme-200 rounded-full text-xs text-pinktheme-800 focus:outline-none focus:border-pinktheme-400">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-pinktheme-500 text-xs"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="storefrontView">
+
+        
+        <!-- MAIN CONTENT SECTION (POWER MAC CENTER STYLE) -->
+<!-- ================= MAIN CONTENT ================= -->
+<!-- ================= APPLE-STYLE DASHBOARD HOMEPAGE ================= -->
+<main class="w-full bg-white flex-1 py-6">
+        
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white">
+            
+            <!-- Item Row 1: iPhone 15 Pro -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 py-12 border-b border-gray-200">
+                <div class="w-full md:w-1/2 flex flex-col items-start text-left pl-2 md:pl-8">
+                    <span class="text-xs font-bold text-[#F77FBE] uppercase tracking-wider mb-2">Pre-Owned</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4">iPhone 15 Pro</h2>
+                    <p class="text-gray-600 text-sm sm:text-base font-normal mb-2">Titanium. So strong. So light. So Pro.</p>
+                    <div class="text-gray-500 text-xs sm:text-sm space-y-0.5 mb-6">
+                        <p>iPhone 15 Pro Max – Starts at ₱42,999.</p>
+                        <p>iPhone 15 Pro – Starts at ₱39,990.</p>
+                    </div>
+                    <div class="flex items-center gap-5">
+                        <a href="#iphone15pro-details" class="text-[#F77FBE] hover:underline text-sm font-medium flex items-center gap-1 transition">
+                            Learn More <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                        <button onclick="openCheckoutModal()" class="px-6 py-2.5 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-sm font-medium shadow-sm transition">
+                            Buy now
+                        </button>
+                    </div>
+                </div>
+               <div class="w-full md:w-[320px] h-[340px] sm:h-[380px] bg-[#F5F5F7] rounded-3xl flex items-center justify-center p-6">
+    <img src="15pro.jpg" alt="iPhone 15 Pro Pre-Owned" class="max-h-full w-auto object-contain mix-blend-multiply">
+</div>
+            </div>
+
+            <!-- Item Row 2: iPhone 14 Pro -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 py-12 border-b border-gray-200">
+                <div class="w-full md:w-1/2 flex flex-col items-start text-left pl-2 md:pl-8">
+                    <span class="text-xs font-bold text-[#F77FBE] uppercase tracking-wider mb-2">Pre-Owned</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4">iPhone 14 Pro</h2>
+                    <p class="text-gray-600 text-sm sm:text-base font-normal mb-2">Pro camera system. Dynamic Island.</p>
+                    <div class="text-gray-500 text-xs sm:text-sm space-y-0.5 mb-6">
+                        <p>iPhone 14 Pro Max – Starts at ₱36,999.</p>
+                        <p>iPhone 14 Pro – Starts at ₱32,999.</p>
+                    </div>
+                    <div class="flex items-center gap-5">
+                        <a href="#iphone14pro-details" class="text-[#F77FBE] hover:underline text-sm font-medium flex items-center gap-1 transition">
+                            Learn More <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                        <button onclick="openCheckoutModal()" class="px-6 py-2.5 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-sm font-medium shadow-sm transition">
+                            Buy now
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-[320px] h-[340px] sm:h-[380px] bg-[#F5F5F7] rounded-3xl flex items-center justify-center p-6">
+    <img src="14pro.jpg" alt="iPhone 14 Pro Pre-Owned" class="max-h-full w-auto object-contain mix-blend-multiply">
+</div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- ================= FOOTER INFO SECTION ================= -->
+<footer class="bg-[#FFF5F8] border-t border-pinktheme-200/80 pt-10 pb-6 text-pinktheme-900">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-pinktheme-200/60">
+            
+            <!-- Column 1: Brand & About -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-pinktheme-700 text-lg">🌸</span>
+                    <h4 class="font-extrabold text-sm text-pinktheme-900">Kate's Original Gadgets</h4>
+                </div>
+                <p class="text-xs text-pinktheme-800/80 leading-relaxed">
+                    Your trusted gadget store, now with full store pickup and delivery nationwide! Authentic smartphones, audio gear, and tech accessories with store warranty.
+                </p>
+            </div>
+
+            <!-- Column 2: Store Locations -->
+            <div>
+                <h4 class="font-extrabold text-xs uppercase tracking-wider text
+
+    </div>
+
+
+    <!-- 1. POWER MAC STYLE "SELECT STORE" MODAL -->
+    <div id="storeModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop transition-opacity duration-300 opacity-0">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-pinktheme-200 transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="storeModalContent">
+            
+            <!-- HEADER -->
+            <div class="bg-gradient-to-r from-pinktheme-200 via-pinktheme-100 to-pinktheme-200 p-6 text-pinktheme-800 relative border-b border-pinktheme-200 shrink-0">
+                <button onclick="closeStoreModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 hover:bg-white text-pinktheme-800 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pinktheme-300 flex items-center justify-center text-pinktheme-800 font-bold text-lg shadow-sm border border-white">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-pinktheme-800">Select Store or Fulfillment</h3>
+                        <p class="text-xs text-pinktheme-700">Choose your preferred branch for store pickup or home delivery</p>
+                    </div>
+                </div>
+
+                
+                
+            </div>
+
+            <!-- SEARCH AND STORE LIST -->
+            <div class="p-6 flex-1 flex flex-col min-h-0 overflow-hidden bg-white space-y-4">
+                <div class="relative">
+                    <input type="text" oninput="filterStores(this.value)" placeholder="Search store location or branch name (e.g. Greenhills, SM Lanang, Megamall)..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 placeholder-pinktheme-600/50 focus:outline-none focus:bg-white focus:border-pinktheme-400 shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-pinktheme-500 text-xs"></i>
+                </div>
+
+                <div id="storeListContainer" class="flex-1 overflow-y-auto space-y-3 pr-1">
+                    <!-- Dynamically populated store list -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- 2. AUTH MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop transition-opacity duration-300 opacity-0">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-pinktheme-200 transform scale-95 transition-transform duration-300" id="authModalContent">
+            
+            <div class="bg-gradient-to-r from-pinktheme-200 via-pinktheme-100 to-pinktheme-200 p-6 text-pinktheme-800 relative border-b border-pinktheme-200">
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 hover:bg-white text-pinktheme-800 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pinktheme-300 flex items-center justify-center text-pinktheme-800 font-bold text-lg shadow-sm border border-white">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-pinktheme-800" id="authModalTitle">Sign In to Kate's Original Gadgets</h3>
+                        <p class="text-xs text-pinktheme-700">Track orders, save wishlist & get discounts</p>
+                    </div>
+                </div>
+
+                <div class="flex border-b border-pinktheme-300 mt-6 -mb-6">
+                    <button id="tabBtnLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-center text-xs font-bold border-b-2 border-pinktheme-700 text-pinktheme-800 transition">
+                        Sign In
+                    </button>
+                    <button id="tabBtnSignup" onclick="switchAuthTab('signup')" class="flex-1 py-2 text-center text-xs font-bold border-b-2 border-transparent text-pinktheme-600 hover:text-pinktheme-800 transition">
+                        Register Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 pt-8 bg-white">
+                <!-- SIGN IN FORM -->
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-800 mb-1">Email Address</label>
+                        <div class="relative">
+                            <input type="email" id="loginEmail" required placeholder="kate@katesgadgets.ph" 
+                                class="w-full pl-9 pr-4 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 focus:outline-none focus:bg-white focus:border-pinktheme-400">
+                            <i class="fa-regular fa-envelope absolute left-3 top-3 text-pinktheme-500 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-pinktheme-800">Password</label>
+                            <a href="#" onclick="showToast('Password reset is not available in this demo. Please contact Kate\'s support.', 'info'); return false;" class="text-[11px] font-semibold text-pinktheme-600 hover:underline">Forgot password?</a>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="loginPassword" required placeholder="••••••••" 
+                                class="w-full pl-9 pr-10 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 focus:outline-none focus:bg-white focus:border-pinktheme-400">
+                            <i class="fa-solid fa-lock absolute left-3 top-3 text-pinktheme-500 text-xs"></i>
+                            <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-2.5 text-pinktheme-500 hover:text-pinktheme-800">
+                                <i class="fa-regular fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-pinktheme-700 hover:bg-pinktheme-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <span>Sign In Now</span>
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-800 mb-1">Full Name</label>
+                        <div class="relative">
+                            <input type="text" id="signupName" required placeholder="e.g. Maria Santos" 
+                                class="w-full pl-9 pr-4 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 focus:outline-none focus:bg-white focus:border-pinktheme-400">
+                            <i class="fa-regular fa-user absolute left-3 top-3 text-pinktheme-500 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-800 mb-1">Email Address</label>
+                        <div class="relative">
+                            <input type="email" id="signupEmail" required placeholder="maria@example.ph" 
+                                class="w-full pl-9 pr-4 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 focus:outline-none focus:bg-white focus:border-pinktheme-400">
+                            <i class="fa-regular fa-envelope absolute left-3 top-3 text-pinktheme-500 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-pinktheme-800 mb-1">Create Password</label>
+                        <div class="relative">
+                            <input type="password" id="signupPassword" minlength="6" required placeholder="Minimum 6 characters" 
+                                class="w-full pl-9 pr-10 py-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl text-xs text-pinktheme-800 focus:outline-none focus:bg-white focus:border-pinktheme-400">
+                            <i class="fa-solid fa-key absolute left-3 top-3 text-pinktheme-500 text-xs"></i>
+                            <button type="button" onclick="togglePasswordVisibility('signupPassword', this)" class="absolute right-3 top-2.5 text-pinktheme-500 hover:text-pinktheme-800">
+                                <i class="fa-regular fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-pinktheme-600 hover:bg-pinktheme-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <span>Create Account</span>
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. CART DRAWER -->
+    <div id="cartDrawer" onclick="if(event.target===this)toggleCartDrawer()" class="fixed inset-0 z-50 hidden modal-backdrop transition-opacity duration-300 opacity-0">
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="cartDrawerContent">
+            
+            <div class="p-5 border-b border-pinktheme-200 flex items-center justify-between bg-gradient-to-r from-pinktheme-200 via-pinktheme-100 to-pinktheme-200 text-pinktheme-800">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-pinktheme-600"></i>
+                    <h3 class="font-bold text-sm text-pinktheme-800">Shopping Cart</h3>
+                    <span id="cartDrawerCountBadge" class="bg-pinktheme-300 text-pinktheme-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-white">0 items</span>
+                </div>
+                <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white/60 hover:bg-white text-pinktheme-800 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- FULFILLMENT MODE PILL IN CART -->
+            <div class="px-5 py-3 bg-pinktheme-100/80 border-b border-pinktheme-200 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2 text-pinktheme-800 font-bold truncate">
+                    <i class="fa-solid fa-store text-pinktheme-600"></i>
+                    <span class="truncate" id="cartFulfillmentLabel">Pickup: Greenhills Flagship</span>
+                </div>
+                <button onclick="toggleCartDrawer(); openStoreModal();" class="text-[11px] font-extrabold text-pinktheme-700 hover:underline shrink-0">
+                    Change
+                </button>
+            </div>
+
+            <div id="cartItemList" class="flex-1 p-5 overflow-y-auto space-y-3 bg-white">
+                <!-- Dynamically populated -->
+            </div>
+
+            <div class="p-5 border-t border-pinktheme-200 bg-pinktheme-50 space-y-3">
+                <div class="space-y-1.5 text-xs text-pinktheme-800">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal" class="font-bold text-pinktheme-800">₱0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Estimated Shipping / Fee</span>
+                        <span id="cartShipping" class="text-emerald-700 font-bold">FREE</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-extrabold text-pinktheme-800 pt-2 border-t border-pinktheme-200">
+                        <span>Total</span>
+                        <span id="cartTotal" class="text-pinktheme-800">₱0.00</span>
+                    </div>
+                </div>
+
+                <div data-customer-only class="grid grid-cols-2 gap-2">
+                    <a href="cart-dashboard.html" class="py-3.5 bg-white border border-pinktheme-200 hover:bg-pinktheme-100 text-pinktheme-800 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i><span>View Cart</span>
+                    </a>
+                    <button onclick="goCheckout()" class="py-3.5 bg-pinktheme-700 hover:bg-pinktheme-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-credit-card"></i><span>Checkout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. WISHLIST DRAWER -->
+    <div id="wishlistDrawer" onclick="if(event.target===this)toggleWishlistModal()" class="fixed inset-0 z-50 hidden modal-backdrop transition-opacity duration-300 opacity-0">
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="wishlistDrawerContent">
+            
+            <div class="p-5 border-b border-pinktheme-200 flex items-center justify-between bg-gradient-to-r from-pinktheme-200 via-pinktheme-100 to-pinktheme-200 text-pinktheme-800">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-pinktheme-600"></i>
+                    <h3 class="font-bold text-sm text-pinktheme-800">My Saved Wishlist</h3>
+                    <span id="wishlistDrawerCountBadge" class="bg-pinktheme-300 text-pinktheme-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-white">0 items</span>
+                </div>
+                <button onclick="toggleWishlistModal()" class="w-8 h-8 rounded-full bg-white/60 hover:bg-white text-pinktheme-800 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="wishlistItemList" class="flex-1 p-5 overflow-y-auto space-y-3 bg-white">
+                <!-- Dynamically populated -->
+            </div>
+
+            <div class="p-5 border-t border-pinktheme-200 bg-pinktheme-50 space-y-3">
+                <button onclick="addAllWishlistToCart()" class="w-full py-3.5 bg-pinktheme-700 hover:bg-pinktheme-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span>Add All Items to Cart</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. QUICK VIEW MODAL -->
+    <div id="quickViewModal" onclick="if(event.target===this)closeQuickView()" role="dialog" aria-modal="true" aria-labelledby="qvTitle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 overflow-y-auto modal-backdrop transition-opacity duration-300 opacity-0">
+        <div class="bg-white w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl shadow-2xl border border-pinktheme-200 transform scale-95 transition-transform duration-300 relative">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-pinktheme-100 hover:bg-pinktheme-200 text-pinktheme-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2" id="quickViewContent">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINERS -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    
+
+<script>
+        /* Kate's Original Gadgets - storefront script.
+           Data (catalog, cart, wishlist, accounts, orders) comes from kg.js so that
+           every page shares one implementation. */
+        const STORES = KG.STORES;
+        const esc = KG.util.esc;
+        let PRODUCTS = [];
+
+        const CATEGORIES = [
+            { id: 'all', label: 'All Products' },
+            { id: 'smartphones', label: 'Smartphones' },
+            { id: 'smartwatches', label: 'Smartwatches' },
+            { id: 'audio', label: 'Earphones & Audio' },
+            { id: 'tablets', label: 'Tablets' },
+            { id: 'accessories', label: 'Accessories' }
+        ];
+
+        let selectedStore = STORES[1]; // Default to Greenhills Flagship
+        let selectedRegionFilter = 'All';
+        let storeSearchQuery = '';
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let currentSort = 'featured';
+        let currentCondition = 'all';   // 'all' | 'new' | 'preowned' | an exact grade
+        let qvProductId = null;
+        let qvQty = 1;
+
+        function showToast(message, type = 'info') { KG.ui.toast(message, type); }
+        function loadProducts() { PRODUCTS = KG.catalog.published(); }
+        function findProduct(id) { return PRODUCTS.find(p => String(p.id) === String(id)); }
+        function saveStore() { try { localStorage.setItem('kate_selected_store', selectedStore.id); } catch (e) {} }
+        function renderAll() {
+            loadProducts();
+            renderAuthHeader();
+            updateCartUI();
+            updateWishlistUI();
+            renderConditionButtons();
+            renderProducts();
+        }
+
+        function updateStoreHeaderUI() {
+            const headerLabel = document.getElementById('selectedStoreHeaderLabel');
+            const headerLabelMobile = document.getElementById('selectedStoreHeaderLabelMobile');
+            const heroPill = document.getElementById('heroStorePillLabel');
+            const cartFulfillmentLabel = document.getElementById('cartFulfillmentLabel');
+
+            const displayName = selectedStore.isDelivery ? 'Home Delivery' : selectedStore.name.replace("Kate's ", "");
+
+            if (headerLabel) headerLabel.innerText = displayName;
+            if (headerLabelMobile) headerLabelMobile.innerText = displayName.split(' ')[0];
+            if (heroPill) heroPill.innerText = selectedStore.name;
+            if (cartFulfillmentLabel) cartFulfillmentLabel.innerText = selectedStore.isDelivery ? 'Fulfillment: Home Delivery' : `Pickup: ${selectedStore.name}`;
+        }
+
+        function renderCategoryButtons() {
+            const container = document.getElementById('categoryContainer');
+            if (!container) return;
+            container.innerHTML = CATEGORIES.map(cat => `
+                <button onclick="filterCategory('${cat.id}')" 
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${currentCategory === cat.id ? 'bg-pinktheme-700 text-white shadow-sm' : 'bg-white hover:bg-pinktheme-200 text-pinktheme-800 border border-pinktheme-200'}">
+                    ${cat.label}
+                </button>
+            `).join('');
+        }
+
+        function renderAuthHeader() {
+            const container = document.getElementById('authHeaderContainer');
+            if (!container) return;
+            const user = KG.auth.currentUser();
+            if (user) {
+                const initials = user.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                const target = KG.auth.isAdmin(user) ? 'dashboard.html' : 'account.html';
+                container.innerHTML = `
+                    <a href="${target}" class="flex items-center gap-2 p-1 bg-white rounded-full border border-pinktheme-200 hover:bg-pinktheme-100 transition shadow-sm" title="${KG.auth.isAdmin(user) ? 'Staff Dashboard' : 'My Account'}">
+                        <span class="w-8 h-8 rounded-full bg-pinktheme-700 text-white text-[11px] font-extrabold flex items-center justify-center">${esc(initials)}</span>
+                        <span class="hidden sm:inline text-xs font-bold text-pinktheme-800 pr-2">${esc(user.name.split(' ')[0])}</span>
+                    </a>`;
+            } else {
+                container.innerHTML = `
+                    <button onclick="openAuthModal('login')" class="relative p-2.5 text-pinktheme-700 hover:bg-pinktheme-200/60 rounded-full transition flex items-center justify-center" title="Sign In / Account">
+                        <i class="fa-regular fa-user text-lg"></i>
+                    </button>`;
+            }
+        }
+
+        function renderProducts() {
+            let list = [...PRODUCTS];
+
+            if (currentCategory !== 'all') list = list.filter(p => p.category === currentCategory);
+            if (currentCondition === 'new' || currentCondition === 'preowned') list = list.filter(p => KG.conditionKind(p.condition) === currentCondition);
+            else if (currentCondition !== 'all') list = list.filter(p => p.condition === currentCondition);
+            if (searchQuery) list = list.filter(p => p.name.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery));
+
+            if (currentSort === 'price-low') list.sort((a,b) => a.price - b.price);
+            else if (currentSort === 'price-high') list.sort((a,b) => b.price - a.price);
+            else if (currentSort === 'rating') list.sort((a,b) => b.rating - a.rating);
+
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyCatalogState');
+            if (!grid) return;
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-xs font-bold text-pinktheme-700">No products match your search.
+                    <button onclick="resetFilters()" class="ml-1 underline">Clear filters</button></div>`;
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+            grid.innerHTML = list.map(p => {
+                const soldOut = p.stock <= 0;
+                const low = !soldOut && p.stock <= p.lowAt;
+                return `
+                <div onclick="openQuickView(${p.id})" class="bg-white rounded-3xl border border-pinktheme-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-pinktheme-300 transition duration-300 flex flex-col group cursor-pointer" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openQuickView(${p.id})" aria-label="View details for ${esc(p.name)}">
+                    <div class="relative aspect-square bg-pinktheme-50 overflow-hidden">
+                        <img src="${esc(p.image)}" alt="${esc(p.name)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute bottom-3 left-3">${KG.ui.conditionPill(p.condition)}</span>
+                        ${soldOut ? '<span class="absolute top-3 left-3 bg-pinktheme-900 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full">SOLD OUT</span>'
+                            : low ? `<span class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full">ONLY ${p.stock} LEFT</span>` : ''}
+                        <button data-customer-only onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 text-pinktheme-700 flex items-center justify-center shadow-sm hover:text-pinktheme-500 transition" aria-label="Toggle wishlist">
+                            <i class="${KG.wishlist.has(p.id) ? 'fa-solid fa-heart text-pinktheme-500' : 'fa-regular fa-heart'}"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center gap-1 text-amber-400 text-[11px] mb-1">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-bold text-pinktheme-800 ml-1">${p.rating}</span>
+                                <span class="text-pinktheme-600/60">(${p.reviewsCount})</span>
+                            </div>
+                            <h3 class="font-extrabold text-pinktheme-800 text-xs sm:text-sm leading-snug group-hover:text-pinktheme-600 transition">${esc(p.name)}</h3>
+                            <p class="text-[11px] text-pinktheme-700 mt-1"><span class="font-bold">Condition:</span> ${esc(p.condition)}</p>
+                        </div>
+
+                        <div class="pt-3 border-t border-pinktheme-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-pinktheme-600/40 line-through">${p.originalPrice ? '₱' + p.originalPrice.toLocaleString() : ''}</span>
+                                <span class="text-sm font-black text-pinktheme-800 block">₱${p.price.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                            </div>
+                            <button data-customer-only onclick="event.stopPropagation(); addToCart(${p.id})" ${soldOut ? 'disabled' : ''} class="px-3.5 py-2 ${soldOut ? 'bg-gray-300 cursor-not-allowed' : 'bg-pinktheme-700 hover:bg-pinktheme-800'} text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-cart-plus"></i> ${soldOut ? 'Sold out' : 'Add'}
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function openStoreModal() {
+            renderStoreRegionFilters();
+            renderStoreList();
+            const modal = document.getElementById('storeModal');
+            const content = document.getElementById('storeModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeStoreModal() {
+            const modal = document.getElementById('storeModal');
+            const content = document.getElementById('storeModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function renderStoreRegionFilters() {
+            const regions = ['All', 'Metro Manila', 'Mindanao', 'Visayas', 'Delivery'];
+            const container = document.getElementById('storeRegionContainer');
+            if (!container) return;
+
+            container.innerHTML = regions.map(r => `
+                <button onclick="setStoreRegionFilter('${r}')" 
+                    class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition ${selectedRegionFilter === r ? 'bg-pinktheme-700 text-white shadow-sm' : 'bg-white text-pinktheme-800 border border-pinktheme-200 hover:bg-pinktheme-100'}">
+                    ${r}
+                </button>
+            `).join('');
+        }
+
+        function setStoreRegionFilter(region) {
+            selectedRegionFilter = region;
+            renderStoreRegionFilters();
+            renderStoreList();
+        }
+
+        function filterStores(query) {
+            storeSearchQuery = query.trim().toLowerCase();
+            renderStoreList();
+        }
+
+        function renderStoreList() {
+            const container = document.getElementById('storeListContainer');
+            if (!container) return;
+
+            let filtered = [...STORES];
+
+            if (selectedRegionFilter === 'Delivery') {
+                filtered = filtered.filter(s => s.isDelivery);
+            } else if (selectedRegionFilter !== 'All') {
+                filtered = filtered.filter(s => s.region === selectedRegionFilter);
+            }
+
+            if (storeSearchQuery) {
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(storeSearchQuery) || 
+                    s.address.toLowerCase().includes(storeSearchQuery) ||
+                    s.region.toLowerCase().includes(storeSearchQuery)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-pinktheme-700/70">
+                        <i class="fa-solid fa-store-slash text-2xl text-pinktheme-400 mb-2"></i>
+                        <p class="text-xs font-bold">No store locations found matching "${storeSearchQuery}"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(store => {
+                const isSelected = selectedStore.id === store.id;
+                return `
+                    <div class="p-4 rounded-2xl border transition duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isSelected ? 'bg-pinktheme-100/90 border-pinktheme-500 shadow-sm' : 'bg-pinktheme-50/50 border-pinktheme-200 hover:bg-pinktheme-100/50'}">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded bg-pinktheme-300 text-pinktheme-800 text-[10px] font-black uppercase tracking-wider">${store.badge}</span>
+                                <h4 class="text-xs font-extrabold text-pinktheme-800">${store.name}</h4>
+                            </div>
+                            <p class="text-xs text-pinktheme-700/80 font-medium"><i class="fa-solid fa-location-dot text-pinktheme-500 mr-1"></i> ${store.address}</p>
+                            <div class="flex flex-wrap items-center gap-3 text-[11px] text-pinktheme-600/90 pt-1">
+                                <span><i class="fa-regular fa-clock mr-1"></i> ${store.hours}</span>
+                                <span><i class="fa-solid fa-phone mr-1"></i> ${store.phone}</span>
+                            </div>
+                        </div>
+
+                        <div class="shrink-0 flex sm:flex-col items-center sm:items-end justify-between gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-pinktheme-200">
+                            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> ${store.pickupTime}
+                            </span>
+                            <button onclick="selectStoreBranch('${store.id}')" 
+                                class="px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${isSelected ? 'bg-emerald-600 text-white' : 'bg-pinktheme-700 text-white hover:bg-pinktheme-800'}">
+                                ${isSelected ? '<i class="fa-solid fa-check"></i> Selected Store' : 'Select This Store'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectStoreBranch(storeId) {
+            const store = STORES.find(s => s.id === storeId);
+            if (!store) return;
+
+            selectedStore = store;
+            saveStore();
+            updateStoreHeaderUI();
+            closeStoreModal();
+
+            showToast(store.isDelivery ? 'Set fulfillment to Home Delivery!' : `Selected ${store.name} for Store Pickup!`, 'success');
+        }
+
+        function closeAnnouncement() {
+            const bar = document.getElementById('announcementBar');
+            if (bar) bar.style.display = 'none';
+        }
+
+        function openAuthModal(tab = 'login') {
+            const modal = document.getElementById('authModal');
+            const content = document.getElementById('authModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+            switchAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            const content = document.getElementById('authModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const tabBtnLogin = document.getElementById('tabBtnLogin');
+            const tabBtnSignup = document.getElementById('tabBtnSignup');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabBtnLogin.className = 'flex-1 py-2 text-center text-xs font-bold border-b-2 border-pinktheme-700 text-pinktheme-800 transition';
+                tabBtnSignup.className = 'flex-1 py-2 text-center text-xs font-bold border-b-2 border-transparent text-pinktheme-600 hover:text-pinktheme-800 transition';
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabBtnSignup.className = 'flex-1 py-2 text-center text-xs font-bold border-b-2 border-pinktheme-700 text-pinktheme-800 transition';
+                tabBtnLogin.className = 'flex-1 py-2 text-center text-xs font-bold border-b-2 border-transparent text-pinktheme-600 hover:text-pinktheme-800 transition';
+            }
+        }
+
+        function togglePasswordVisibility(id, btn) {
+            const field = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash text-xs';
+            } else {
+                field.type = 'password';
+                icon.className = 'fa-regular fa-eye text-xs';
+            }
+        }
+
+        function setBusy(btn, busy, label) {
+            if (!btn) return;
+            if (busy) { btn.dataset.label = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>' + label + '</span>'; }
+            else { btn.disabled = false; if (btn.dataset.label) btn.innerHTML = btn.dataset.label; }
+        }
+
+        function afterAuth(user, message) {
+            renderAll();
+            showToast(message, 'success');
+            const next = sessionStorage.getItem('kg_after_login');
+            sessionStorage.removeItem('kg_after_login');
+            if (next && !KG.auth.isAdmin(user)) setTimeout(() => { location.href = next; }, 400);
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            setBusy(btn, true, 'Signing in…');
+            setTimeout(() => {      // lets the loading state paint before hashing
+                const r = KG.auth.login(email, password);
+                setBusy(btn, false);
+                if (!r.ok) return showToast(r.error, 'error');
+                e.target.reset();
+                closeAuthModal();
+                afterAuth(r.user, KG.auth.isAdmin(r.user) ? 'Signed in as Kate (Staff). Welcome back!' : `Welcome back, ${r.user.name}!`);
+            }, 30);
+        }
+
+        function handleSignupSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const data = {
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                password: document.getElementById('signupPassword').value
+            };
+            setBusy(btn, true, 'Creating account…');
+            setTimeout(() => {
+                const r = KG.auth.register(data);
+                setBusy(btn, false);
+                if (!r.ok) return showToast(r.error, 'error');
+                e.target.reset();
+                closeAuthModal();
+                afterAuth(r.user, `Account created! Welcome, ${r.user.name}!`);
+            }, 30);
+        }
+
+        function handleLogout() {
+            KG.auth.logout();
+            renderAll();
+            showToast('Signed out successfully.', 'info');
+        }
+
+        function filterCategory(catId) {
+            currentCategory = catId;
+            renderCategoryButtons();
+            renderProducts();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val.trim().toLowerCase();
+            renderProducts();
+        }
+
+        function handleSortChange(val) {
+            currentSort = val;
+            renderProducts();
+        }
+
+        function filterCondition(c) {
+            currentCondition = c;
+            renderConditionButtons();
+            renderProducts();
+        }
+
+        function renderConditionButtons() {
+            const box = document.getElementById('conditionContainer');
+            if (!box) return;
+            const n = f => PRODUCTS.filter(f).length;
+            const opts = [['all', 'All conditions', PRODUCTS.length],
+                          ['new', 'Brand New', n(p => KG.conditionKind(p.condition) === 'new')],
+                          ['preowned', 'Pre-Owned (all grades)', n(p => KG.conditionKind(p.condition) === 'preowned')]];
+            KG.CONDITIONS.filter(c => KG.conditionKind(c) === 'preowned').forEach(c => opts.push([c, c, n(p => p.condition === c)]));
+            if (!opts.some(o => o[0] === currentCondition && (o[2] > 0 || o[0] === 'all'))) currentCondition = 'all';
+            box.innerHTML = opts.filter(o => o[0] === 'all' || o[2] > 0).map(([id, label, count]) => `
+                <button onclick="filterCondition('${id}')" aria-pressed="${currentCondition === id}"
+                    class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${currentCondition === id ? 'bg-pinktheme-700 text-white shadow-sm' : 'bg-white hover:bg-pinktheme-200 text-pinktheme-800 border border-pinktheme-200'}">
+                    ${esc(label)} <span class="opacity-70">(${count})</span>
+                </button>`).join('');
+        }
+
+        function resetFilters() {
+            currentCondition = 'all';
+            currentCategory = 'all';
+            searchQuery = '';
+            const searchEl = document.getElementById('searchInput');
+            if (searchEl) searchEl.value = '';
+            renderCategoryButtons();
+            renderProducts();
+        }
+
+        /* ---------- drawers ---------- */
+        function setDrawer(drawerId, contentId, open) {
+            const drawer = document.getElementById(drawerId);
+            const content = document.getElementById(contentId);
+            if (!drawer || !content) return;
+            if (open) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => { drawer.classList.remove('opacity-0'); content.classList.remove('translate-x-full'); }, 10);
+            } else {
+                drawer.classList.add('opacity-0');
+                content.classList.add('translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            }
+        }
+        const drawerOpen = id => { const d = document.getElementById(id); return d && !d.classList.contains('hidden'); };
+        function openCartDrawer() { renderAll(); setDrawer('cartDrawer', 'cartDrawerContent', true); }
+        function toggleCartDrawer() { setDrawer('cartDrawer', 'cartDrawerContent', !drawerOpen('cartDrawer')); }
+        function toggleWishlistModal() { setDrawer('wishlistDrawer', 'wishlistDrawerContent', !drawerOpen('wishlistDrawer')); }
+
+        /* ---------- cart ---------- */
+        function addToCart(id, qty = 1) {
+            const r = KG.cart.add(id, qty);
+            if (!r.ok) { showToast(r.error, 'error'); return false; }
+            showToast(`Added ${r.product.name} to your cart (${r.qty} in cart)`, 'success');
+            if (!drawerOpen('cartDrawer')) openCartDrawer();   // open (never toggle) so a 2nd add can't close it
+            return true;
+        }
+        function changeQty(id, delta) {
+            const r = KG.cart.change(id, delta);
+            if (!r.ok) showToast(r.error, 'error');
+        }
+        function removeFromCart(id) { KG.cart.remove(id); showToast('Item removed from cart', 'info'); }
+
+        function updateCartUI() {
+            const d = KG.cart.detailed();
+            const money = n => '₱' + n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const setText = (id, t) => { const el = document.getElementById(id); if (el) el.textContent = t; };
+            setText('cartBadge', d.count);
+            setText('cartDrawerCountBadge', `${d.count} item${d.count !== 1 ? 's' : ''}`);
+            setText('cartSubtotal', money(d.subtotal));
+            setText('cartShipping', d.count ? 'Calculated at checkout' : '—');
+            setText('cartTotal', money(d.subtotal));
+
+            const container = document.getElementById('cartItemList');
+            if (!container) return;
+            if (!d.lines.length) {
+                container.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-basket-shopping text-3xl text-pinktheme-400 mb-2"></i><p class="text-xs font-bold text-pinktheme-800">Your cart is empty</p></div>`;
+                return;
+            }
+            container.innerHTML = d.lines.map(l => `
+                <div class="flex gap-3 p-3 bg-pinktheme-50 rounded-2xl border ${l.issue ? 'border-red-300' : 'border-pinktheme-200'} items-center">
+                    <img src="${esc(l.image)}" alt="${esc(l.name)}" class="w-12 h-12 object-cover rounded-xl bg-white">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs font-bold text-pinktheme-800 truncate">${esc(l.name)}</h4>
+                        <div class="my-0.5">${KG.ui.conditionLabel(l.condition)}</div>
+                        <p class="text-[11px] text-pinktheme-700/80">${money(l.price)} each</p>
+                        <p class="text-xs font-black text-pinktheme-800">${l.issue ? '<span class="text-red-600 font-bold">' + (l.issue === 'over' ? 'Only ' + l.stock + ' in stock' : 'Unavailable') + '</span>' : money(l.subtotal)}</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1.5">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="changeQty(${l.id}, -1)" class="w-6 h-6 rounded bg-white text-pinktheme-800 text-xs font-bold border border-pinktheme-200" aria-label="Decrease quantity">−</button>
+                            <span class="text-xs font-bold text-pinktheme-800 w-5 text-center">${l.qty}</span>
+                            <button onclick="changeQty(${l.id}, 1)" class="w-6 h-6 rounded bg-white text-pinktheme-800 text-xs font-bold border border-pinktheme-200" aria-label="Increase quantity">+</button>
+                        </div>
+                        <button onclick="removeFromCart(${l.id})" class="text-[10px] font-bold text-pinktheme-500 hover:text-red-500" aria-label="Remove item"><i class="fa-regular fa-trash-can"></i> Remove</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function goCheckout() {
+            const user = KG.auth.currentUser();
+            if (KG.auth.isAdmin(user)) return showToast('Staff accounts cannot place orders.', 'error');
+            const notes = KG.cart.reconcile();
+            if (notes.length) { renderAll(); return showToast(notes[0], 'error'); }
+            if (KG.cart.count() === 0) return showToast('Your cart is empty!', 'error');
+            if (!user) {
+                sessionStorage.setItem('kg_after_login', 'checkout.html');
+                setDrawer('cartDrawer', 'cartDrawerContent', false);
+                openAuthModal('login');
+                return showToast('Please sign in before placing an order.', 'info');
+            }
+            location.href = 'checkout.html';
+        }
+
+        /* ---------- wishlist ---------- */
+        function toggleWishlist(id) {
+            const r = KG.wishlist.toggle(id);
+            showToast(r.added ? 'Added item to wishlist!' : 'Removed item from wishlist', r.added ? 'success' : 'info');
+        }
+        function updateWishlistUI() {
+            const ids = KG.wishlist.ids();
+            const items = PRODUCTS.filter(p => ids.includes(p.id));
+            const badge = document.getElementById('wishlistBadge');
+            const drawerBadge = document.getElementById('wishlistDrawerCountBadge');
+            if (badge) { badge.textContent = items.length; badge.classList.toggle('hidden', items.length === 0); }
+            if (drawerBadge) drawerBadge.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
+            const container = document.getElementById('wishlistItemList');
+            if (!container) return;
+            if (!items.length) {
+                container.innerHTML = `<div class="text-center py-12"><i class="fa-regular fa-heart text-3xl text-pinktheme-400 mb-2"></i><p class="text-xs font-bold text-pinktheme-800">Your wishlist is empty</p></div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="flex gap-3 p-3 bg-pinktheme-50 rounded-2xl border border-pinktheme-200 items-center">
+                    <img src="${esc(item.image)}" alt="${esc(item.name)}" class="w-12 h-12 object-cover rounded-xl bg-white">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs font-bold text-pinktheme-800 truncate">${esc(item.name)}</h4>
+                        <div class="my-0.5">${KG.ui.conditionLabel(item.condition)}</div>
+                        <p class="text-xs font-black text-pinktheme-800">₱${item.price.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="addToCart(${item.id})" ${item.stock <= 0 ? 'disabled' : ''} class="px-2.5 py-1.5 ${item.stock <= 0 ? 'bg-gray-300' : 'bg-pinktheme-700 hover:bg-pinktheme-800'} text-white rounded-xl text-[10px] font-bold transition"><i class="fa-solid fa-cart-plus"></i> ${item.stock <= 0 ? 'Sold out' : 'Add'}</button>
+                        <button onclick="toggleWishlist(${item.id})" class="p-1.5 text-pinktheme-600 hover:text-red-500 transition" aria-label="Remove from wishlist"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>
+                </div>`).join('');
+        }
+        function addAllWishlistToCart() {
+            const ids = KG.wishlist.ids();
+            if (!ids.length) return showToast('Wishlist is empty!', 'info');
+            let added = 0, failed = 0;
+            ids.forEach(id => { KG.cart.add(id, 1).ok ? added++ : failed++; });
+            if (added) showToast(`Added ${added} wishlist item(s) to cart!` + (failed ? ` ${failed} could not be added (sold out / stock limit).` : ''), failed ? 'info' : 'success');
+            else showToast('None of those items could be added (sold out or stock limit).', 'error');
+        }
+
+        /* ---------- product details modal ---------- */
+        function parseSpecs(text) {
+            return String(text || '').split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+                const i = l.indexOf(':');
+                return i > 0 ? [l.slice(0, i).trim(), l.slice(i + 1).trim()] : ['', l];
+            });
+        }
+        function renderQuickView() {
+            const p = findProduct(qvProductId);
+            const content = document.getElementById('quickViewContent');
+            if (!p || !content) return;
+            const soldOut = p.stock <= 0;
+            const inCart = (KG.cart.detailed().lines.find(l => l.id === p.id) || {}).qty || 0;
+            const maxAdd = Math.max(0, p.stock - inCart);
+            if (qvQty > maxAdd) qvQty = Math.max(1, maxAdd);
+            const specs = parseSpecs(p.specs);
+            content.innerHTML = `
+                <div class="bg-pinktheme-50 p-6 flex items-center justify-center border-b md:border-b-0 md:border-r border-pinktheme-200">
+                    <img src="${esc(p.image)}" alt="${esc(p.name)}" class="max-h-64 w-full object-contain rounded-2xl">
+                </div>
+                <div class="p-6 flex flex-col justify-between gap-4">
+                    <div>
+                        ${p.badge ? `<span class="${esc(p.badgeColor || 'bg-pinktheme-600')} bg-pinktheme-600 text-white text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase shadow-sm">${esc(p.badge)}</span>` : ''}
+                        <h3 id="qvTitle" class="text-lg font-extrabold text-pinktheme-800 mt-2 pr-8">${esc(p.name)}</h3>
+                        <div class="flex items-center gap-1 text-amber-400 text-xs my-1">
+                            <i class="fa-solid fa-star"></i><span class="font-bold text-pinktheme-800 ml-1">${p.rating}</span>
+                            <span class="text-pinktheme-600/60">(${p.reviewsCount} reviews)</span>
+                        </div>
+                        <div class="mt-2 p-3 rounded-xl border ${KG.conditionKind(p.condition) === 'new' ? 'bg-emerald-50 border-emerald-200' : 'bg-pinktheme-50 border-pinktheme-200'}">
+                            <div class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mb-1">Condition</div>
+                            <div class="flex flex-wrap items-center gap-1">${KG.ui.conditionLabel(p.condition)}</div>
+                            <p class="text-xs text-pinktheme-800 mt-1">${esc(KG.conditionDesc(p.condition))}</p>
+                        </div>
+                        <p class="text-xs text-pinktheme-700/80 leading-relaxed mt-2">${esc(p.description)}</p>
+                        ${specs.length ? `<div class="mt-3"><h4 class="text-[10px] font-black uppercase tracking-wider text-pinktheme-600 mb-1">Specifications</h4>
+                            <dl class="text-xs divide-y divide-pinktheme-100 border border-pinktheme-100 rounded-xl overflow-hidden">${specs.map(([k, v]) => `<div class="flex justify-between gap-3 px-3 py-1.5 bg-white">${k ? `<dt class="text-pinktheme-600">${esc(k)}</dt>` : ''}<dd class="font-bold text-pinktheme-800 text-right">${esc(v)}</dd></div>`).join('')}</dl></div>` : ''}
+                        <div class="mt-3 text-xs font-bold ${soldOut ? 'text-red-600' : p.stock <= p.lowAt ? 'text-amber-600' : 'text-emerald-700'}">
+                            <i class="fa-solid ${soldOut ? 'fa-ban' : 'fa-circle-check'} mr-1"></i>${soldOut ? 'Sold out' : p.stock <= p.lowAt ? `Only ${p.stock} left in stock` : `${p.stock} in stock`}${inCart ? ` · ${inCart} in your cart` : ''}
+                        </div>
+                        <div onclick="closeQuickView(); openStoreModal();" class="mt-3 p-2.5 bg-pinktheme-50 border border-pinktheme-200 rounded-xl flex items-center justify-between cursor-pointer hover:bg-pinktheme-100 transition">
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-store text-pinktheme-600 text-xs"></i>
+                                <div><span class="block text-[10px] font-bold text-pinktheme-600 uppercase">Fulfillment</span>
+                                <span class="text-xs font-extrabold text-pinktheme-800">${selectedStore.isDelivery ? 'Home Delivery' : 'Pickup: ' + esc(selectedStore.name)}</span></div></div>
+                            <span class="text-[10px] font-bold text-pinktheme-700 underline">Change</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mb-3">
+                            <span class="text-xs text-pinktheme-600/50 line-through">${p.originalPrice ? '₱' + p.originalPrice.toLocaleString() : ''}</span>
+                            <span class="text-xl font-black text-pinktheme-800 block">₱${p.price.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div data-customer-only class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold text-pinktheme-800">Quantity</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="qvChange(-1)" ${soldOut || qvQty <= 1 ? 'disabled' : ''} class="w-8 h-8 rounded-lg border border-pinktheme-200 bg-white font-bold text-pinktheme-800 disabled:opacity-40" aria-label="Decrease quantity">−</button>
+                                <span id="qvQty" class="w-8 text-center text-sm font-black text-pinktheme-900">${soldOut || maxAdd === 0 ? 0 : qvQty}</span>
+                                <button onclick="qvChange(1)" ${soldOut || qvQty >= maxAdd ? 'disabled' : ''} class="w-8 h-8 rounded-lg border border-pinktheme-200 bg-white font-bold text-pinktheme-800 disabled:opacity-40" aria-label="Increase quantity">+</button>
+                            </div>
+                        </div>
+                        <div data-customer-only class="flex gap-2">
+                            <button onclick="qvAdd()" ${maxAdd === 0 ? 'disabled' : ''} class="flex-1 py-3 ${maxAdd === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-pinktheme-700 hover:bg-pinktheme-800'} text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> ${soldOut ? 'Sold out' : maxAdd === 0 ? 'Max quantity in cart' : 'Add to Cart'}
+                            </button>
+                            <button onclick="toggleWishlist(${p.id}); renderQuickView();" class="p-3 bg-pinktheme-100 text-pinktheme-700 hover:bg-pinktheme-200 rounded-xl transition" aria-label="Toggle wishlist">
+                                <i class="${KG.wishlist.has(p.id) ? 'fa-solid fa-heart text-pinktheme-500' : 'fa-regular fa-heart'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        function qvChange(d) { qvQty = Math.max(1, qvQty + d); renderQuickView(); }
+        function qvAdd() {
+            if (addToCart(qvProductId, qvQty)) { closeQuickView(); }
+            else renderQuickView();
+        }
+        function openQuickView(id) {
+            const p = findProduct(id);
+            if (!p) return;
+            qvProductId = p.id; qvQty = 1;
+            const modal = document.getElementById('quickViewModal');
+            if (!modal) return;
+            renderQuickView();
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                const inner = modal.querySelector('div');
+                if (inner) inner.classList.remove('scale-95');
+            }, 10);
+        }
+        function closeQuickView() {
+            const modal = document.getElementById('quickViewModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            modal.classList.add('opacity-0');
+            const inner = modal.querySelector('div');
+            if (inner) inner.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Escape') return;
+            closeQuickView(); closeStoreModal(); closeAuthModal();
+            if (drawerOpen('cartDrawer')) toggleCartDrawer();
+            if (drawerOpen('wishlistDrawer')) toggleWishlistModal();
+        });
+
+        /* ---------- start-up ---------- */
+        window.addEventListener('kg:change', renderAll);
+        window.onload = function () {
+            const savedStoreId = localStorage.getItem('kate_selected_store');
+            const found = savedStoreId && STORES.find(s => s.id === savedStoreId);
+            if (found) selectedStore = found;
+
+            updateStoreHeaderUI();
+            renderCategoryButtons();
+            renderAll();
+            renderHeroCarousel();
+            startHeroAutoSlide();
+
+            const q = new URLSearchParams(location.search);
+            if (q.get('login')) { openAuthModal('login'); showToast('Please sign in to continue.', 'info'); }
+            if (q.get('denied')) showToast('That page is for Kate\'s staff only.', 'error');
+            if (q.get('login') || q.get('denied')) history.replaceState(null, '', location.pathname + location.hash);
+        };
+
+        const HERO_SLIDES = [
+    {
+        type: 'image_banner',
+        image: 'iphone18pro_banner.webp',
+        ctaLink: '#catalog',
+        bgClass: 'bg-[#F5F5F7]'
+    },
+    {
+        type: 'image_banner',
+        image: 'iphoneduo_banner.webp',
+        ctaLink: '#catalog',
+        groundBottom: true,
+        bgClass: 'bg-[#F5F5F7]'
+    },
+    {
+        type: 'image_banner',
+        image: 'watchultra4_banner.webp',
+        ctaLink: '#catalog',
+        bgClass: 'bg-black'
+    }
+];
+
+let currentHeroSlide = 0;
+let heroAutoSlide = null;
+
+function renderHeroCarousel() {
+    const container = document.getElementById("heroSlider");
+    const dots = document.getElementById("heroDots");
+
+    if (!container || !dots) return;
+
+    // 1. Initial build of slides if missing
+    const slideNodes = container.querySelectorAll('.hero-slide');
+    if (slideNodes.length !== HERO_SLIDES.length) {
+        container.innerHTML = HERO_SLIDES.map((slide) => {
+            const alignClass = slide.groundBottom ? 'items-end' : 'items-center';
+            const objectClass = slide.groundBottom ? 'object-bottom' : 'object-center';
+
+            return `
+                <div class="hero-slide absolute inset-0 w-full h-full transition-all duration-700 ease-in-out flex ${alignClass} justify-center">
+                    <a href="${slide.ctaLink || '#catalog'}" class="w-full h-full flex ${alignClass} justify-center">
+                        <img src="${slide.image}" alt="Hero Banner" class="w-full h-full object-contain ${objectClass} max-h-[480px]"/>
+                    </a>
+                </div>
+            `;
+        }).join('');
+
+        dots.innerHTML = HERO_SLIDES.map((_, index) => `
+            <button onclick="setHeroSlide(${index})" class="hero-dot h-2.5 rounded-full transition-all duration-500 w-2.5 bg-gray-300 hover:bg-gray-400" aria-label="Go to slide ${index + 1}"></button>
+        `).join('');
+    }
+
+    // 2. Apply background colors and slide positions inside the hero card
+    const updatedSlideNodes = container.querySelectorAll('.hero-slide');
+    updatedSlideNodes.forEach((node, index) => {
+        const slide = HERO_SLIDES[index];
+        const bg = slide.bgClass || 'bg-[#F5F5F7]';
+        const alignClass = slide.groundBottom ? 'items-end' : 'items-center';
+
+        node.className = `hero-slide absolute inset-0 w-full h-full transition-all duration-700 ease-in-out flex ${alignClass} justify-center ${bg}`;
+
+        if (index === currentHeroSlide) {
+            node.classList.add('translate-x-0', 'opacity-100', 'z-10');
+        } else if (index < currentHeroSlide) {
+            node.classList.add('-translate-x-full', 'opacity-0', 'z-0', 'pointer-events-none');
+        } else {
+            node.classList.add('translate-x-full', 'opacity-0', 'z-0', 'pointer-events-none');
+        }
+    });
+
+    // 3. Style indicator dots according to active slide contrast
+    const activeSlide = HERO_SLIDES[currentHeroSlide];
+    const isDark = activeSlide.bgClass === 'bg-black';
+
+    const dotNodes = dots.querySelectorAll('.hero-dot');
+    dotNodes.forEach((dot, index) => {
+        if (index === currentHeroSlide) {
+            dot.className = `hero-dot h-2.5 rounded-full transition-all duration-500 w-7 ${isDark ? 'bg-white' : 'bg-gray-800'}`;
+        } else {
+            dot.className = `hero-dot h-2.5 rounded-full transition-all duration-500 w-2.5 ${isDark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-300 hover:bg-gray-400'}`;
+        }
+    });
+}
+
+function nextHeroSlide() {
+    currentHeroSlide = (currentHeroSlide + 1) % HERO_SLIDES.length;
+    renderHeroCarousel();
+}
+
+function setHeroSlide(index) {
+    currentHeroSlide = index;
+    renderHeroCarousel();
+    startHeroAutoSlide();
+}
+
+function startHeroAutoSlide() {
+    if (heroAutoSlide) clearInterval(heroAutoSlide);
+    heroAutoSlide = setInterval(nextHeroSlide, 4000);
+}
+
+// Make globally accessible for dot clicks
+window.setHeroSlide = setHeroSlide;
+    </script>
+
+</body>
+</html>

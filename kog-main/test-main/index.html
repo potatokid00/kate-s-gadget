@@ -13,20 +13,20 @@
                 extend: {
                     colors: {
                         pinktheme: {
-                            50: '#FFF5F8',   // Ultra soft light pink background
-                            100: '#FCEEF2',  // Light pink primary tint
-                            200: '#F8DDE5',  // Soft blush accent & borders
-                            300: '#F3C0D0',  // Rose pink pill / badges
-                            400: '#E297AF',  // Rose gold pink
-                            500: '#C86D8B',  // Soft magenta rose accent
-                            600: '#9E4665',  // Deep rose accent
-                            700: '#7B314E',  // Rich plum pink (headings/buttons)
-                            800: '#592037',  // Dark rose text
-                            900: '#3D1223'   // Deepest text tone
+                            50: '#FFF5F9',   // Ultra soft light pink background
+                            100: '#FFE4F2',  // Light pink primary tint
+                            200: '#FCCCE5',  // Soft blush accent & borders
+                            300: '#FA9ECC',  // Soft pink pill / badges
+                            400: '#F77FBE',  // Persian Pink (Primary Brand Color)
+                            500: '#E56CAB',  // Medium Persian Pink accent
+                            600: '#C74D8E',  // Deep Persian Pink
+                            700: '#9E336D',  // Rich plum pink (headings/buttons)
+                            800: '#70204C',  // Dark rose text
+                            900: '#450F2E'   // Deepest text tone
                         }
                     },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
                     }
                 }
             }
@@ -43,9 +43,7 @@
     
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #FFF5F8;
-            color: #592037;
+            color: #F77FBE;
         }
         ::-webkit-scrollbar {
             width: 8px;
@@ -104,6 +102,7 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pinktheme-200 selection:text-pinktheme-800">
 
+    
     <header class="sticky top-0 z-30 bg-[#FFF5F8]/90 backdrop-blur-md border-b border-pinktheme-200 shadow-sm transition-all duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20 gap-3 sm:gap-4">
@@ -207,48 +206,14 @@
     </div>
 
     <!-- iPad Category Dropdown -->
-    <div class="relative group py-1">
-        <a href="#catalog" onclick="filterCategory('tablets')" class="hover:text-pinktheme-500 transition flex items-center gap-1.5 cursor-pointer py-1">
-            iPad
-            <i class="fa-solid fa-chevron-down text-[9px] text-pinktheme-400 group-hover:rotate-180 transition-transform duration-200"></i>
-        </a>
-
-        <div class="absolute left-0 top-full mt-1 w-48 bg-white border border-pinktheme-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50 transition-all">
-            <a href="#catalog" onclick="filterCategory('tablets')" class="block px-4 py-2 text-xs font-extrabold text-pinktheme-900 hover:bg-pinktheme-100/60 transition">View all iPad</a>
-            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
-            <a href="#catalog" onclick="filterCategory('tablets')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPad Pro</a>
-            <a href="#catalog" onclick="filterCategory('tablets')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPad Air</a>
-            <a href="#catalog" onclick="filterCategory('tablets')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPad mini</a>
-            <a href="#catalog" onclick="filterCategory('tablets')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">iPad</a>
-            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
-            <a href="#catalog" onclick="filterCategory('accessories')" class="block px-4 py-2 text-xs font-semibold text-pinktheme-700 hover:bg-pinktheme-100/60 transition">iPad Accessories</a>
-        </div>
-    </div>
-
-    <a href="#catalog" onclick="filterCategory('laptops')" class="hover:text-pinktheme-500 transition py-1">Laptops & PCs</a>
+    
+    
 
     <!-- Watch Category Dropdown -->
-    <div class="relative group py-1">
-        <a href="#catalog" onclick="filterCategory('smartwatches')" class="hover:text-pinktheme-500 transition flex items-center gap-1.5 cursor-pointer py-1">
-            Watch
-            <i class="fa-solid fa-chevron-down text-[9px] text-pinktheme-400 group-hover:rotate-180 transition-transform duration-200"></i>
-        </a>
+    
 
-        <div class="absolute left-0 top-full mt-1 w-52 bg-white border border-pinktheme-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50 transition-all">
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-2 text-xs font-extrabold text-pinktheme-900 hover:bg-pinktheme-100/60 transition">View all Watch</a>
-            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">Apple Watch Ultra 4</a>
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">Apple Watch Series 12</a>
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">Apple Watch Ultra 3</a>
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">Apple Watch Series 11</a>
-            <a href="#catalog" onclick="filterCategory('smartwatches')" class="block px-4 py-1.5 text-xs text-pinktheme-800 hover:bg-pinktheme-100/60 transition">Apple Watch SE</a>
-            <div class="h-px bg-pinktheme-200/60 my-1 mx-3"></div>
-            <a href="#catalog" onclick="filterCategory('accessories')" class="block px-4 py-2 text-xs font-semibold text-pinktheme-700 hover:bg-pinktheme-100/60 transition">Apple Watch Accessories</a>
-        </div>
-    </div>
-
-    <a href="#catalog" onclick="filterCategory('audio')" class="hover:text-pinktheme-500 transition py-1">iPhone Pre-Owned</a>
-    <a href="#catalog" onclick="filterCategory('accessories')" class="hover:text-pinktheme-500 transition py-1">Accessories & Chargers</a>
+    <a href="preowned.html" onclick="filterCategory('audio')" class="hover:text-pinktheme-500 transition py-1">iPhone Pre-Owned</a>
+    
     <!-- Change this -->
 <a href="support.html" class="hover:text-pinktheme-500 transition py-1">Support</a>
 <a href="about.html" class="hover:text-pinktheme-600 transition">About Us</a>
@@ -268,304 +233,177 @@
 
     <div id="storefrontView">
 
-        <!-- HERO CAROUSEL -->
-<!-- HERO CAROUSEL -->
-    <section class="bg-[#F5F5F7] py-4 sm:py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="relative">
-                <!-- Floating Hero Card Frame -->
-                <div id="heroSlider" class="relative w-full min-h-[350px] sm:min-h-[420px] md:min-h-[480px] rounded-3xl overflow-hidden shadow-sm flex items-center justify-center">
-                    <!-- Banner injected by JS -->
-                </div>
-
-                <!-- Navigation Dots -->
-                <div id="heroDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center gap-2">
-                    <!-- Navigation dots injected by JS -->
-                </div>
-            </div>
-        </div>
-    </section>
-
-        <!-- PRODUCT CATALOG SECTION -->
+        
         <!-- MAIN CONTENT SECTION (POWER MAC CENTER STYLE) -->
-<main id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+<!-- ================= MAIN CONTENT ================= -->
+<!-- ================= APPLE-STYLE DASHBOARD HOMEPAGE ================= -->
+<main class="w-full bg-white space-y-3 pb-12">
 
-    <!-- 1. VIEW ALL PRODUCTS (CATEGORY GRID WITH STARTING PRICES) -->
-    <section>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-8">View all products.</h2>
-        <div class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-4 text-center">
+    <!-- HERO 1: iPhone Duo (Light Showcase) -->
+    <!-- HERO 1: iPhone Duo (Animated Loop Showcase) -->
+    <section class="relative bg-[#F5F5F7] overflow-hidden border-b border-gray-200/50 flex justify-center items-center py-4 sm:py-8">
+        <div class="relative w-full max-w-[980px] mx-auto flex flex-col items-center justify-center">
             
-            <button onclick="filterCategory('smartphones')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            <!-- Text & Action Buttons (Layered inside top video canvas) -->
+            <div class="absolute top-4 sm:top-8 left-0 right-0 z-10 text-center px-4 pointer-events-auto">
+                <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#1d1d1f] mb-1 sm:mb-2">iPhone Duo</h1>
+                <p class="text-xl sm:text-2xl font-normal text-[#6e6e73] mb-4 sm:mb-5">Hello, hello.</p>
+                
+                <!-- Persian Pink (#F77FBE) Action Buttons -->
+                <div class="flex items-center justify-center gap-3">
+                    <a href="#iphone-duo" class="px-4 py-1.5 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-sm font-normal transition shadow-sm">Learn more</a>
+                    <button onclick="openCheckoutModal()" class="px-4 py-1.5 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-sm font-normal transition-colors">Buy</button>
                 </div>
-                <span class="text-xs font-bold text-gray-900">iPhone</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱24,990</span>
-            </button>
+            </div>
 
-            <button onclick="filterCategory('tablets')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">iPad</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱18,990</span>
-            </button>
-
-            <button onclick="filterCategory('laptops')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">Mac</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱36,990</span>
-            </button>
-
-            <button onclick="filterCategory('smartwatches')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">WATCH</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱9,000</span>
-            </button>
-
-            <button onclick="filterCategory('audio')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">Music</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱8,190</span>
-            </button>
-
-            <button onclick="filterCategory('tv')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">TV & Home</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱8,000</span>
-            </button>
-
-            <button onclick="filterCategory('accessories')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">Accessories</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱100</span>
-            </button>
-
-            <button onclick="filterCategory('airtag')" class="group flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100 transition">
-                <div class="w-14 h-14 mb-2 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-gray-800 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </div>
-                <span class="text-xs font-bold text-gray-900">AirTag</span>
-                <span class="text-[10px] text-gray-500 mt-0.5">From ₱1,890</span>
-            </button>
+            <!-- Video Animation -->
+            <video autoplay muted playsinline poster="iphoneduo_banner.jpg" class="w-full h-auto object-contain scale-[1.08] sm:scale-[1.12] transform origin-bottom pointer-events-none">
+                <source src="iphoneduo_animation.mp4" type="video/mp4">
+                <img src="iphoneduo_banner.jpg" alt="iPhone Duo" class="w-full h-auto">
+            </video>
 
         </div>
     </section>
-
-    <!-- 2. SEE WHAT'S NEW (FEATURED NEW RELEASES GRID) -->
-    <section>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-8">See what's new.</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+    <!-- HERO 2: MacBook Pro (Dark Showcase) -->
+    <section class="relative bg-black text-white text-center pt-10 sm:pt-14 pb-4 overflow-hidden border-b border-gray-800 flex flex-col items-center justify-start">
+        <div class="relative w-full max-w-[1100px] mx-auto flex flex-col items-center justify-center">
             
-            <!-- Card 1 -->
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="h-40 flex items-center justify-center mb-4">
-                    <img src="iphoneduo.webp" alt="iPhone Duo" class="max-h-32 object-contain"/>
-                </div>
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-orange-600 tracking-wider">NEW PRE-ORDER</span>
-                    <h3 class="text-base font-bold text-gray-900 mt-1">iPhone Duo</h3>
-                    <p class="text-xs text-gray-500 mt-1">Hello, hello.</p>
-                    <p class="text-xs text-gray-700 font-medium mt-4">Pre-order. Starts at <span class="font-bold">₱159,990</span>.</p>
+            <!-- Bold Tagline & Action Buttons -->
+            <div class="z-10 text-center px-4 relative">
+                <h2 class="text-4xl sm:text-6xl font-bold text-white mb-4 sm:mb-6 tracking-tight">Pro further.</h2>
+                
+                <!-- Persian Pink (#F77FBE) Action Buttons -->
+                <div class="flex items-center justify-center gap-3">
+                    <a href="#iphone18pro" class="px-5 py-2 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-sm font-medium transition shadow-md">Learn more</a>
+                    <button onclick="openCheckoutModal()" class="px-5 py-2 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-sm font-medium transition-colors">Buy</button>
                 </div>
             </div>
 
-            <!-- Card 2 -->
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="h-40 flex items-center justify-center mb-4">
-                    <img src="iphone18.webp" alt="iPhone 18 Pro" class="max-h-32 object-contain"/>
-                </div>
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-orange-600 tracking-wider">NEW</span>
-                    <h3 class="text-base font-bold text-gray-900 mt-1">iPhone 18 Pro</h3>
-                    <p class="text-xs text-gray-500 mt-1">Pro further.</p>
-                    <p class="text-xs text-gray-700 font-medium mt-4">Buy now. Starts at <span class="font-bold">₱94,990</span>.</p>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="h-40 flex items-center justify-center mb-4">
-                    <img src="airpods5.webp" alt="AirPods 5" class="max-h-32 object-contain rounded-xl"/>
-                </div>
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-orange-600 tracking-wider">NEW</span>
-                    <h3 class="text-base font-bold text-gray-900 mt-1">AirPods 5</h3>
-                    <p class="text-xs text-gray-500 mt-1">Discover Active Noise Cancellation.</p>
-                    <p class="text-xs text-gray-700 font-medium mt-4">Buy now. Starts at <span class="font-bold">₱9,490</span>.</p>
-                </div>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="h-40 flex items-center justify-center mb-4">
-                    <img src="watchultra4.webp" alt="WATCH Ultra 4" class="max-h-32 object-contain rounded-xl"/>
-                </div>
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-orange-600 tracking-wider">NEW</span>
-                    <h3 class="text-base font-bold text-gray-900 mt-1">WATCH Ultra 4</h3>
-                    <p class="text-xs text-gray-500 mt-1">A battery you can't outrun.</p>
-                    <p class="text-xs text-gray-700 font-medium mt-4">Buy now. Starts at <span class="font-bold">₱59,990</span>.</p>
-                </div>
-            </div>
-
-            <!-- Card 5 -->
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition duration-300 border border-gray-100">
-                <div class="h-40 flex items-center justify-center mb-4">
-                    <img src="watchseries12.webp" alt="WATCH Series 12" class="max-h-32 object-contain rounded-xl"/>
-                </div>
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-orange-600 tracking-wider">NEW</span>
-                    <h3 class="text-base font-bold text-gray-900 mt-1">WATCH Series 12</h3>
-                    <p class="text-xs text-gray-500 mt-1">A work of heart.</p>
-                    <p class="text-xs text-gray-700 font-medium mt-4">Buy now. Starts at <span class="font-bold">₱28,990</span>.</p>
-                </div>
+            <!-- Video Animation -->
+            <div class="w-full flex justify-center items-center overflow-hidden -mt-4 sm:-mt-8">
+                <video autoplay muted playsinline class="w-full h-auto max-w-[900px] sm:max-w-[1100px] scale-105 sm:scale-115 transform origin-top object-contain pointer-events-none">
+                    <source src="iphone18 animation.mp4" type="video/mp4">
+                    <source src="iphone18_animation.mp4" type="video/mp4">
+                </video>
             </div>
 
         </div>
     </section>
-
-    <!-- 3. VIEW IN-STORE CLASSES AND SUPPORT -->
-    <section>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-8">View in-store classes and support.</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+    <!-- APPLE 2-COLUMN PROMO GRID -->
+    <section class="max-w-[1400px] mx-auto px-3 sm:px-4 pt-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-gray-400 tracking-wider">PICK UP IN-STORE</span>
-                    <h4 class="text-sm font-bold text-gray-900 mt-2 leading-snug">Pick up your online order at select stores.</h4>
-                </div>
-            </div>
+            <!-- Grid Card 1: iPhone 18 Pro (Dark) -->
+            
 
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-blue-600 tracking-wider">UPTRADE PROGRAM</span>
-                    <h4 class="text-sm font-bold text-gray-900 mt-2 leading-snug">Trade in your device to save on the upgrade.</h4>
-                </div>
-            </div>
+        <!-- iPhone 17 Pro Image (Features Native  iPhone 17 PRO Graphic) -->
+        <div class="relative bg-black rounded-3xl overflow-hidden border border-gray-800 transition-transform duration-300 hover:scale-[1.01] flex flex-col justify-end items-center h-full min-h-[480px] sm:min-h-[520px]">
+        
+        <!-- Flush Background Graphic (Fills Card 100% Edge-to-Edge) -->
+        <img src="iphone17pro.jfif" alt="iPhone 17 Pro" class="absolute inset-0 w-full h-full object-cover object-top pointer-events-none">
 
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-gray-400 tracking-wider">BASECAMP</span>
-                    <h4 class="text-sm font-bold text-gray-900 mt-2 leading-snug">Learn how to maximize Apple technology.</h4>
-                </div>
-            </div>
-
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-blue-600 tracking-wider">MOBILE CARE</span>
-                    <h4 class="text-sm font-bold text-gray-900 mt-2 leading-snug">Get premium service and repair support.</h4>
-                </div>
-            </div>
-
-            <div class="bg-[#F9F9FB] rounded-3xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
-                <div>
-                    <span class="text-[10px] font-extrabold uppercase text-gray-400 tracking-wider">FREE TRAINING</span>
-                    <h4 class="text-sm font-bold text-gray-900 mt-2 leading-snug">Group Training: Learn more about Apple.</h4>
-                </div>
-            </div>
-
+        <!-- Overlay Action Buttons (Persian Pink #F77FBE) -->
+        <div class="relative z-10 pb-6 sm:pb-8 w-full flex items-center justify-center gap-3">
+            <a href="#iphone17pro" class="px-5 py-2 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-xs sm:text-sm font-medium transition shadow-lg">Learn more</a>
+            <button onclick="openCheckoutModal()" class="px-5 py-2 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-xs sm:text-sm font-medium transition-colors bg-black/50 backdrop-blur-sm">Buy</button>
         </div>
+
+    </div>
+            <!-- Grid Card 2: iPad mini (Light) -->
+           <div class="relative bg-[#0d162d] rounded-3xl overflow-hidden border border-gray-800 transition-transform duration-300 hover:scale-[1.01] flex flex-col justify-end items-center h-full min-h-[480px] sm:min-h-[520px]">
+        
+        <!-- Full-Bleed Image (Zero Zoom, Focal Point Shifted Upward) -->
+        <img src="iPhone166.jfif" alt="iPhone 16" class="absolute inset-0 w-full h-full object-cover object-[center_80%] pointer-events-none">
+
+        <!-- Persian Pink (#F77FBE) Overlay Action Buttons -->
+        <div class="relative z-10 pb-6 sm:pb-8 w-full flex items-center justify-center gap-3">
+            <a href="#iphone16" class="px-5 py-2 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-xs sm:text-sm font-medium transition shadow-lg">Learn more</a>
+            <button onclick="openCheckoutModal()" class="px-5 py-2 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-xs sm:text-sm font-medium transition-colors bg-black/40 backdrop-blur-sm">Buy</button>
+        </div>
+
+    </div>
+                
+
+            <!-- Grid Card 3: AirPods Pro 3 (Light) -->
+            <!-- PRODUCT GRID CARD: iPhone 15 Pro (Titanium - Nudged Downward) -->
+    <!-- PRODUCT GRID CARD: iPhone 15 Pro (Large Top Header - Nudged Down) -->
+    <!-- Top Header Text using Font Awesome Apple Icon -->
+<!-- PRODUCT GRID CARD: iPhone 15 Pro -->
+<div class="bg-black text-white rounded-3xl p-6 sm:p-8 text-center flex flex-col items-center justify-between min-h-[480px] sm:min-h-[520px] relative overflow-hidden border border-gray-800 transition-transform duration-300 hover:scale-[1.01]">
+    
+    <!-- Top Header Text with Font Awesome Apple Logo -->
+    <div class="z-10 pt-2">
+        <div class="flex items-center justify-center gap-2 mb-1">
+            <i class="fa-brands fa-apple text-2xl sm:text-3xl text-white"></i>
+            <h3 class="text-white text-3xl sm:text-4xl font-bold tracking-tight">iPhone 15 Pro</h3>
+        </div>
+        <p class="text-gray-400 text-xs sm:text-sm">So strong. So light. So Pro.</p>
+    </div>
+
+    <!-- Centered Titanium Graphic -->
+    <div class="w-full flex-1 flex items-center justify-center pointer-events-none py-4 px-2">
+        <img src="iphone 15pro.jfif" alt="iPhone 15 Pro" class="max-h-[220px] sm:max-h-[260px] object-contain translate-y-2">
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="z-10 w-full flex items-center justify-center gap-3 pb-2">
+        <a href="#iphone15pro" class="px-5 py-2 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-xs sm:text-sm font-medium transition shadow-lg">Learn more</a>
+        <button onclick="openCheckoutModal()" class="px-5 py-2 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-xs sm:text-sm font-medium transition-colors bg-black/40 backdrop-blur-sm">Buy</button>
+    </div>
+
+</div>
+            <!-- Grid Card 4: WATCH Ultra 4 (Dark) -->
+            <!-- PRODUCT GRID CARD: iPhone Air (Replaces Apple Watch) -->
+<!-- PRODUCT GRID CARD: iPhone Air (Clean White Theme with Header Parity) -->
+<div class="bg-white text-gray-900 rounded-3xl p-6 sm:p-8 text-center flex flex-col items-center justify-between min-h-[480px] sm:min-h-[520px] relative overflow-hidden border border-gray-200 transition-transform duration-300 hover:scale-[1.01]">
+    
+    <!-- Top Header Text (Matches iPhone 15 Pro Header Parity) -->
+    <div class="z-10 pt-2">
+        <div class="flex items-center justify-center gap-2 mb-1">
+            <i class="fa-brands fa-apple text-2xl sm:text-3xl text-gray-900"></i>
+            <h3 class="text-gray-900 text-3xl sm:text-4xl font-bold tracking-tight">iPhone Air</h3>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm">Thinside out. Powerfully light.</p>
+    </div>
+
+    <!-- Centered Graphic (Clean - No Gray Border Lines) -->
+    <div class="w-full flex-1 flex items-center justify-center pointer-events-none py-2 px-2">
+        <img src="IPHONE AIR.jfif" alt="iPhone Air" class="w-full h-auto max-h-[220px] sm:max-h-[260px] object-contain translate-y-1">
+    </div>
+
+    <!-- Persian Pink (#F77FBE) Action Buttons -->
+    <div class="z-10 w-full flex items-center justify-center gap-3 pb-2">
+        <a href="#iphoneair" class="px-5 py-2 rounded-full bg-[#F77FBE] hover:bg-[#E56CAB] text-white text-xs sm:text-sm font-medium transition shadow-lg">Learn more</a>
+        <button onclick="openCheckoutModal()" class="px-5 py-2 rounded-full border border-[#F77FBE] text-[#F77FBE] hover:bg-[#F77FBE] hover:text-white text-xs sm:text-sm font-medium transition-colors bg-black/5 backdrop-blur-sm">Buy</button>
+    </div>
+
+</div>
     </section>
 
-    <!-- 4. FULL CATALOG PRODUCTS GRID -->
-    <section class="pt-8 border-t border-gray-200">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-extrabold text-gray-900">All Products</h2>
-            <div class="flex items-center gap-2">
-                <label for="sortSelect" class="text-xs font-bold text-gray-600">Sort:</label>
-                <select id="sortSelect" onchange="handleSortChange(this.value)" class="bg-white border border-gray-200 text-gray-800 text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-gray-400 shadow-sm cursor-pointer">
-                    <option value="featured">Featured Gadgets</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Highest Rated</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-6 space-y-3" aria-label="Product filters">
-            <div id="categoryContainer" class="flex flex-wrap gap-2"></div>
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-bold text-gray-600"><i class="fa-solid fa-tag mr-1"></i>Condition:</span>
-                <div id="conditionContainer" class="flex flex-wrap gap-2"></div>
-            </div>
-        </div>
-
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- Dynamically populated via renderProducts() -->
-        </div>
-    </section>
+   
+    
 
 </main>
 
-<!-- ================= CUSTOMER SUPPORT SECTION ================= -->
-
-
-        <!-- FOOTER -->
-        <footer class="bg-pinktheme-100/60 border-t border-pinktheme-200 text-pinktheme-800 text-xs py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-2 text-pinktheme-800 font-extrabold text-base">
-                            <i class="fa-solid fa-spa text-pinktheme-500"></i> Kate's Original Gadgets
-                        </div>
-                        <p class="text-xs text-pinktheme-700/80 leading-relaxed font-medium">
-                            Your trusted gadget store, now with full store pickup and delivery nationwide! Authentic smartphones, audio gear, and tech accessories with store warranty.
-                        </p>
-                    </div>
-                    <div>
-                        <h4 class="font-extrabold text-pinktheme-800 uppercase text-[11px] mb-3">Store Locations</h4>
-                        <ul class="space-y-2 text-pinktheme-800/80">
-                            <li><a href="#" onclick="openStoreModal(); return false;" class="hover:text-pinktheme-600">Greenhills Promenade Flagship</a></li>
-                            <li><a href="#" onclick="openStoreModal(); return false;" class="hover:text-pinktheme-600">SM Megamall Cyberzone</a></li>
-                            <li><a href="#" onclick="openStoreModal(); return false;" class="hover:text-pinktheme-600">SM Mall of Asia Branch</a></li>
-                            <li><a href="#" onclick="openStoreModal(); return false;" class="hover:text-pinktheme-600">SM Lanang Premier Davao</a></li>
-                            <li><a href="#" onclick="openStoreModal(); return false;" class="hover:text-pinktheme-600">Abreeza Mall Davao Branch</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-extrabold text-pinktheme-800 uppercase text-[11px] mb-3">Accepted Payments</h4>
-                        <div class="flex flex-wrap gap-2 text-pinktheme-800 font-bold text-xs">
-                            <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Cash on Delivery (COD)</span>
-                            <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">In-Store Cash/Card</span>
-                            <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">GCash / PayMaya</span>
-                            <span class="px-2.5 py-1 bg-white rounded-md border border-pinktheme-200">Bank Transfer</span>
-                        </div>
-                    <p class="mt-2 text-[10px] text-pinktheme-700/70">Demo project: payments are simulated and no real money is charged.</p>
-                    </div>
-                    <div>
-    <h4 class="font-extrabold text-pinktheme-800 uppercase text-[11px] mb-3">CUSTOMER SUPPORT</h4>
-    
-    <!-- Tap-to-call Phone Number -->
-    <a href="tel:09558844392" class="flex items-center gap-2 text-xs font-bold text-pinktheme-800 hover:text-pinktheme-900 transition mb-3 group">
-        <div class="w-6 h-6 rounded-lg bg-white border border-pinktheme-200 flex items-center justify-center text-pinktheme-700 group-hover:bg-pinktheme-700 group-hover:text-white transition">
-            <i class="fa-solid fa-phone text-[10px]"></i>
-        </div>
-        <span>0955 884 4392</span>
-    </a>
-
-    <!-- Messenger Button -->
-    <a href="https://m.me/katesoriginalgadgets" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-pinktheme-800 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-pinktheme-700 transition">
-        <i class="fa-brands fa-facebook-messenger"></i> Message Kate's Gadgets
-    </a>
-</div>
+<!-- ================= FOOTER INFO SECTION ================= -->
+<footer class="bg-[#FFF5F8] border-t border-pinktheme-200/80 pt-10 pb-6 text-pinktheme-900">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-pinktheme-200/60">
+            
+            <!-- Column 1: Brand & About -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-pinktheme-700 text-lg">🌸</span>
+                    <h4 class="font-extrabold text-sm text-pinktheme-900">Kate's Original Gadgets</h4>
                 </div>
-                <div class="border-t border-pinktheme-200 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-pinktheme-700/70 text-[11px]">
-                    <p>&copy; 2026 Kate's Original Gadgets. All rights reserved.</p>
-                    <span class="font-semibold">Demo store &mdash; all payments are simulated.</span>
-                </div>
+                <p class="text-xs text-pinktheme-800/80 leading-relaxed">
+                    Your trusted gadget store, now with full store pickup and delivery nationwide! Authentic smartphones, audio gear, and tech accessories with store warranty.
+                </p>
             </div>
-        </footer>
+
+            <!-- Column 2: Store Locations -->
+            <div>
+                <h4 class="font-extrabold text-xs uppercase tracking-wider text
 
     </div>
 
